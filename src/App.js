@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Home } from './Home';
+require('dotenv').config();
 
 function App() {
   return (
