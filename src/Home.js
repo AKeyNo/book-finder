@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export const Home = () => {
   const [search, setSearch] = useState(null);
@@ -34,7 +37,7 @@ export const Home = () => {
       });
   };
 
-  const BookInformation = () => {
+  const BookInformation = useCallback(() => {
     return (
       <div>
         <img
@@ -47,23 +50,19 @@ export const Home = () => {
         />
       </div>
     );
-  };
+  }, [book]);
 
   return (
     <>
-      {search}
-      <form onSubmit={handleSubmit}>
-        <label>
-          Book:
-          <input
-            type='text'
-            name='title'
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </label>
-        <input type='submit' value='Search' />
+      <form onSubmit={handleSubmit} noValidate autoComplete='off'>
+        <TextField
+          id='standard-basic'
+          label='Enter book'
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <Button type='submit'>Submit</Button>
       </form>
-      {!loading ? book && <BookInformation /> : 'loading'}
+      {!loading ? book && <BookInformation /> : <CircularProgress />}
     </>
   );
 };
