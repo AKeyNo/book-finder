@@ -31,6 +31,7 @@ export const Home = () => {
       })
       .catch((error) => {
         window.alert(error);
+        setBook(null);
       })
       .finally(() => {
         setLoading(false);
@@ -57,7 +58,7 @@ export const Home = () => {
       <form onSubmit={handleSubmit} noValidate autoComplete='off'>
         <TextField
           id='standard-basic'
-          label='Enter book'
+          label='Enter book name'
           onChange={(e) => setSearch(e.target.value)}
         />
         <Button type='submit'>Submit</Button>
