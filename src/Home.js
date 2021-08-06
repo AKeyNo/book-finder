@@ -8,7 +8,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({
-  root: {},
+  bookSearch: {
+    textAlign: 'center',
+  },
 });
 
 export const Home = () => {
@@ -25,7 +27,9 @@ export const Home = () => {
     event.preventDefault();
     setLoading(true);
     axios
-      .get('https://www.googleapis.com/books/v1/volumes?q=' + search)
+      .get(
+        'https://www.googleapis.com/books/v1/volumes?maxResults=9&q=' + search
+      )
       .then((data) => {
         console.log(data.data);
         if (data.data.totalItems > 0) {
@@ -58,7 +62,7 @@ export const Home = () => {
         {books.map((book) => {
           const bookInformation = book.volumeInfo;
           return (
-            <Grid item xs>
+            <Grid item xs={4} key={book.id}>
               <Paper elevation={0} variant='outlined'>
                 <img
                   src={
@@ -79,7 +83,12 @@ export const Home = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} noValidate autoComplete='off'>
+      <form
+        className={classes.bookSearch}
+        onSubmit={handleSubmit}
+        noValidate
+        autoComplete='off'
+      >
         <TextField
           id='standard-basic'
           label='Enter book name'
@@ -87,7 +96,18 @@ export const Home = () => {
         />
         <Button type='submit'>Submit</Button>
       </form>
-      {!loading ? books && <BookInformation /> : <CircularProgress />}
+
+      <Grid container spacing={1}>
+        <Grid container item xs={false} sm={1} />
+        <Grid container justifyContent={'center'} item xs={12} sm={10}>
+          {!loading ? books && <BookInformation /> : <CircularProgress />}
+        </Grid>
+        <Grid container item xs={false} sm={1} />
+        <Grid container justifyContent={'center'} item xs={12}>
+          <Button className={classes.changePage}>{'<'}</Button>
+          <Button className={classes.changePage}>{'>'}</Button>
+        </Grid>
+      </Grid>
     </>
   );
 };
