@@ -15,18 +15,22 @@ const useStyles = makeStyles({
 
 export const Home = () => {
   const classes = useStyles();
+
+  // handles the input of the user
   const [input, setInput] = useState(null);
+  // is an object that holds the search request and index it is at for that request
   const [search, setSearch] = useState(null);
+  // holds all the books from a given request
   const [books, setBooks] = useState(null);
+  // when loading is true, shows a loading icon
   const [loading, setLoading] = useState(false);
-  const [index, setIndex] = useState(0);
+  // does not render any books when the page first loads
   const firstUpdate = useRef(true);
 
+  // when search gets updated through either a page change or search change,
+  // updates the books to include new book results
   useEffect(() => {
-    console.log('Hello there.');
-  }, []);
-
-  useEffect(() => {
+    // makes sure that books don't load in from null when the page loads
     if (firstUpdate.current) {
       firstUpdate.current = false;
       return;
@@ -36,9 +40,9 @@ export const Home = () => {
     axios
       .get(
         'https://www.googleapis.com/books/v1/volumes?maxResults=9&startIndex=' +
-          index +
+          search.index +
           '&q=' +
-          search
+          search.search
       )
       .then((data) => {
         console.log(data.data);
@@ -57,15 +61,27 @@ export const Home = () => {
       .finally(() => {
         setLoading(false);
       });
-    setLoading(false);
-  }, [index, search]);
+  }, [search]);
 
-  const handleSubmit = (event) => {
+  // handles when the user submits a search
+  const handleSubmitSearch = (event) => {
     event.preventDefault();
-    setSearch(input);
+    setSearch({ search: input, index: 0 });
   };
-  //9x9 grid or something with a page next
 
+  // handles when the user looks for previous results
+  const handlePreviousPage = (event) => {
+    event.preventDefault();
+    setSearch({ ...search, index: search.index - 9 });
+  };
+
+  // handles when the user looks for more results
+  const handleNextPage = (event) => {
+    event.preventDefault();
+    setSearch({ ...search, index: search.index + 9 });
+  };
+
+  // returns a 3x3 grid that displays what is inside books
   const BookInformation = useCallback(() => {
     return (
       <Grid
@@ -101,7 +117,7 @@ export const Home = () => {
     <>
       <form
         className={classes.bookSearch}
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmitSearch}
         noValidate
         autoComplete='off'
       >
@@ -120,27 +136,15 @@ export const Home = () => {
         </Grid>
         <Grid container item xs={false} sm={1} />
         <Grid container justifyContent={'center'} item xs={12}>
-          {books && index > 0 ? (
-            <Button
-              className={classes.changePage}
-              onClick={(event) => {
-                event.preventDefault();
-                setIndex(index - 9);
-              }}
-            >
+          {books && search.index > 0 ? (
+            <Button className={classes.changePage} onClick={handlePreviousPage}>
               {'<'}
             </Button>
           ) : (
             <></>
           )}
           {books ? (
-            <Button
-              className={classes.changePage}
-              onClick={(event) => {
-                event.preventDefault();
-                setIndex(index + 9);
-              }}
-            >
+            <Button className={classes.changePage} onClick={handleNextPage}>
               {'>'}
             </Button>
           ) : (
