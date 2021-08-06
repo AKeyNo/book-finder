@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -15,20 +15,30 @@ const useStyles = makeStyles({
 
 export const Home = () => {
   const classes = useStyles();
+  const [input, setInput] = useState(null);
   const [search, setSearch] = useState(null);
   const [books, setBooks] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [index, setIndex] = useState(0);
+  const firstUpdate = useRef(true);
 
   useEffect(() => {
     console.log('Hello there.');
   }, []);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+
     setLoading(true);
     axios
       .get(
-        'https://www.googleapis.com/books/v1/volumes?maxResults=9&q=' + search
+        'https://www.googleapis.com/books/v1/volumes?maxResults=9&startIndex=' +
+          index +
+          '&q=' +
+          search
       )
       .then((data) => {
         console.log(data.data);
@@ -47,6 +57,12 @@ export const Home = () => {
       .finally(() => {
         setLoading(false);
       });
+    setLoading(false);
+  }, [index, search]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setSearch(input);
   };
   //9x9 grid or something with a page next
 
@@ -92,7 +108,7 @@ export const Home = () => {
         <TextField
           id='standard-basic'
           label='Enter book name'
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => setInput(e.target.value)}
         />
         <Button type='submit'>Submit</Button>
       </form>
@@ -104,8 +120,32 @@ export const Home = () => {
         </Grid>
         <Grid container item xs={false} sm={1} />
         <Grid container justifyContent={'center'} item xs={12}>
-          <Button className={classes.changePage}>{'<'}</Button>
-          <Button className={classes.changePage}>{'>'}</Button>
+          {books && index > 0 ? (
+            <Button
+              className={classes.changePage}
+              onClick={(event) => {
+                event.preventDefault();
+                setIndex(index - 9);
+              }}
+            >
+              {'<'}
+            </Button>
+          ) : (
+            <></>
+          )}
+          {books ? (
+            <Button
+              className={classes.changePage}
+              onClick={(event) => {
+                event.preventDefault();
+                setIndex(index + 9);
+              }}
+            >
+              {'>'}
+            </Button>
+          ) : (
+            <></>
+          )}
         </Grid>
       </Grid>
     </>
