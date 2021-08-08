@@ -6,11 +6,38 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
+  authors: {
+    textAlign: 'center',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+  },
   bookSearch: {
     textAlign: 'center',
+    margin: 16,
   },
+  bookImage: {
+    margin: 'auto',
+    marginTop: 16,
+    display: 'block',
+    width: 'auto',
+    height: '150px',
+  },
+  paper: {
+    width: '100%',
+    height: '100%',
+  },
+  title: {
+    margin: 8,
+    textAlign: 'center',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+  },
+  gridItem: {},
 });
 
 export const Home = () => {
@@ -89,14 +116,15 @@ export const Home = () => {
         direction='row'
         justifyContent='center'
         alignItems='center'
-        spacing={3}
+        spacing={10}
       >
         {books.map((book) => {
           const bookInformation = book.volumeInfo;
           return (
-            <Grid item xs={4} key={book.id}>
-              <Paper elevation={0} variant='outlined'>
+            <Grid className={classes.gridItem} item xs={4} key={book.id}>
+              <Paper className={classes.paper} elevation={0} variant='outlined'>
                 <img
+                  className={classes.bookImage}
                   src={
                     bookInformation.imageLinks !== undefined
                       ? bookInformation.imageLinks.thumbnail
@@ -104,14 +132,34 @@ export const Home = () => {
                   }
                   alt={bookInformation.title}
                 />
-                <div>{bookInformation.title}</div>
+                <Typography className={classes.title} variant='h6' gutterBottom>
+                  {bookInformation.title}
+                </Typography>
+
+                {bookInformation.authors !== undefined ? (
+                  <Typography
+                    className={classes.authors}
+                    variant='subtitle1'
+                    gutterBottom
+                  >
+                    {bookInformation.authors.join(', ')}
+                  </Typography>
+                ) : (
+                  <Typography
+                    className={classes.authors}
+                    variant='subtitle2'
+                    gutterBottom
+                  >
+                    Unknown Author
+                  </Typography>
+                )}
               </Paper>
             </Grid>
           );
         })}
       </Grid>
     );
-  }, [books]);
+  }, [books, classes]);
 
   return (
     <>

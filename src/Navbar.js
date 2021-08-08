@@ -12,7 +12,7 @@ export const Navbar = () => {
   };
 
   return (
-    <AppBar position='static'>
+    <AppBar position='static' color='default'>
       <Tabs value={value} onChange={handleChange}>
         <Tab label='Home' to='/' component={Link} />
         <Tab label='About' to='/about' component={Link} />
