@@ -13,9 +13,7 @@ export const BookPage = () => {
     setLoading(true);
     console.log(id);
     axios
-      .get(
-        'https://www.googleapis.com/books/v1/volumes?maxResults=1&q=isbn:' + id
-      )
+      .get('https://www.googleapis.com/books/v1/volumes?maxResults=1&q=' + id)
       .then((data) => {
         console.log(data.data);
         if (data.data.items) {
