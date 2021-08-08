@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Home } from './Home';
+import { BookPage } from './BookPage';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 require('dotenv').config();
@@ -21,7 +22,9 @@ function App() {
           <Route exact path='/'>
             <Home />
           </Route>
-          <Route exact path='/books/:id'></Route>
+          <Route exact path='/book/:id'>
+            <BookPage />
+          </Route>
           <Router path='*'></Router>
         </Switch>
       </Router>

@@ -38,6 +38,7 @@ const useStyles = makeStyles({
     overflow: 'hidden',
   },
   gridItem: {},
+  description: {},
 });
 
 export const Home = () => {
@@ -153,6 +154,10 @@ export const Home = () => {
                     Unknown Author
                   </Typography>
                 )}
+                <Typography
+                  className={classes.description}
+                  variant='body1'
+                ></Typography>
               </Paper>
             </Grid>
           );
