@@ -19,6 +19,7 @@ const useStyles = makeStyles({
   bookSearch: {
     textAlign: 'center',
     margin: 16,
+    marginBottom: 0,
   },
   bookImage: {
     margin: 'auto',
@@ -196,6 +197,14 @@ export const BookSearch = () => {
         />
         <Button type='submit'>Submit</Button>
       </form>
+
+      <div style={{ textAlign: 'center' }}>
+        <img
+          className={classes.bookSearch}
+          src={'https://books.google.com/googlebooks/images/poweredby.png'}
+          alt={'Google Books service'}
+        />
+      </div>
 
       <Grid container spacing={1}>
         <Grid container item xs={false} sm={1} />
