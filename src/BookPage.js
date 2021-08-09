@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
 
 export const BookPage = () => {
   const [book, setBook] = useState(null);
@@ -13,11 +14,11 @@ export const BookPage = () => {
     setLoading(true);
     console.log(id);
     axios
-      .get('https://www.googleapis.com/books/v1/volumes?maxResults=1&q=' + id)
+      .get('https://www.googleapis.com/books/v1/volumes/' + id)
       .then((data) => {
         console.log(data.data);
-        if (data.data.items) {
-          setBook(data.data.items[0]);
+        if (data.data) {
+          setBook(data.data);
         } else {
           setIsBookFound(false);
         }
@@ -29,7 +30,7 @@ export const BookPage = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [id]);
 
   return <div>{book ? book.volumeInfo.title : <CircularProgress />}</div>;
 };
