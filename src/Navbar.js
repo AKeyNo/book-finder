@@ -16,6 +16,7 @@ export const Navbar = () => {
       <Tabs value={value} onChange={handleChange}>
         <Tab label='Home' to='/' component={Link} />
         <Tab label='About' to='/about' component={Link} />
+        <Tab label='Search' to='/search' component={Link} />
       </Tabs>
     </AppBar>
   );

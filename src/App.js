@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Home } from './Home';
+import { BookSearch } from './BookSearch';
 import { BookPage } from './BookPage';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -21,6 +22,9 @@ function App() {
         <Switch>
           <Route exact path='/'>
             <Home />
+          </Route>
+          <Route exact path='/search'>
+            <BookSearch />
           </Route>
           <Route exact path='/book/:id'>
             <BookPage />
