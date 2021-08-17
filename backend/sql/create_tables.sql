@@ -1,7 +1,7 @@
 -- Creation of users table
 CREATE TABLE IF NOT EXISTS users (
   user_id INT NOT NULL,
-  username varchar(250) NOT NULL,
+  username varchar(250) NOT NULL UNIQUE,
   password varchar(250) NOT NULL,
   PRIMARY KEY (user_id)
 );

@@ -1,5 +1,8 @@
-const loginRouter = require("express").Router();
+const loginRouter = require('express').Router();
+const db = require('../db');
 
-loginRouter.post("/", async (request, response) => {
-    
-}
+// loginRouter.post('/', async (request, response) => {
+//   db.query('SELECT * FROM USERS');
+// });
+
+module.exports = loginRouter;
