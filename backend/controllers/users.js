@@ -15,7 +15,7 @@ usersRouter.post('/signup', async (request, response) => {
     `Attempting to create an account for ${request.body.username}...`
   );
 
-  if (body.username.length < 3 || body.password.length < 3) {
+  if (body.username.length < 3 || body.hashedPassword.length < 3) {
     console.error('username and password must have 3 more more characters');
     return response.status(400).json({
       error: 'username and password must have 3 more more characters',
@@ -37,10 +37,10 @@ usersRouter.post('/signup', async (request, response) => {
     const userID = parseInt(countQuery.rows[0].count) + 1;
 
     const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(body.password, saltRounds);
+    const passwordHash = await bcrypt.hash(body.hashedPassword, saltRounds);
 
     await db.query(
-      `INSERT INTO users (user_id, username, password) values ($1, $2, $3) returning *`,
+      `INSERT INTO users (user_id, username, hashedPassword) values ($1, $2, $3) returning *`,
       [userID, body.username, passwordHash]
     );
 
