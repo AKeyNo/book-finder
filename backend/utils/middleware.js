@@ -7,12 +7,17 @@ const requestLogger = (request, response, next) => {
   next();
 };
 
-const tokenExtractor = (request, response, next) => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    request.token = authorization.substring(7);
-  }
-  next();
+const authenticateToken = (request, response, next) => {
+  const authHeader = request.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (token == null)
+    return response.status(401).json({ error: 'token missing' });
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
+    if (error) return response.status(403).json({ error: 'invalid token' });
+    request.user = user;
+    next();
+  });
 };
 
 const unknownEndpoint = (request, response) => {
@@ -33,7 +38,7 @@ const errorHandler = (error, request, response, next) => {
 
 module.exports = {
   requestLogger,
-  tokenExtractor,
+  authenticateToken,
   unknownEndpoint,
   errorHandler,
 };
