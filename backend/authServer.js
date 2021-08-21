@@ -2,20 +2,19 @@ require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
 const app = express();
-const usersRouter = require('./controllers/users');
+const loginRouter = require('./controllers/login');
 const middleware = require('./utils/middleware');
-const port = process.env.PORT || 3001;
+const port = process.env.AUTHPORT || 4001;
 
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
 
 app.use(middleware.requestLogger);
 
-app.use('/api/users', usersRouter);
+app.use('/api/login', loginRouter);
+// app.use('/api/token');
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
