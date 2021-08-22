@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS readList (
   book_id varchar(250) NOT NULL,
   user_id INT NOT NULL,
+  pages_read INT NOT NULL DEFAULT 0,
+  finished BOOLEAN NOT NULL DEFAULT FALSE,
   CONSTRAINT fk_user
     FOREIGN KEY(user_id)
     REFERENCES users(user_id)

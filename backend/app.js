@@ -5,6 +5,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const app = express();
 const usersRouter = require('./controllers/users');
+const booksRouter = require('./controllers/books');
 const middleware = require('./utils/middleware');
 const port = process.env.PORT || 3001;
 
@@ -16,7 +17,7 @@ app.use(cookieParser());
 app.use(middleware.requestLogger);
 
 app.use('/api/users', usersRouter);
-
+app.use('/api/books', booksRouter);
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
