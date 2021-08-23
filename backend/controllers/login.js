@@ -12,7 +12,7 @@ loginRouter.get('/', async (request, response) => {
     body.username,
   ]);
 
-  const user = userQuery.rowFs[0];
+  const user = userQuery.rows[0];
   const isCorrectPassword =
     userQuery.rowCount === 0
       ? false
@@ -24,14 +24,14 @@ loginRouter.get('/', async (request, response) => {
     });
   }
 
-  const userInfo = { name: user.username };
+  const userInfo = { user_id: user.user_id, username: user.username };
   const accessToken = generateAccessToken(userInfo);
   const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
   response.json({ accessToken, refreshToken });
 });
 
 const generateAccessToken = (user) => {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' });
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 };
 
 module.exports = loginRouter;

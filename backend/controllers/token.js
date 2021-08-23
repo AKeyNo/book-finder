@@ -6,7 +6,6 @@ const { token } = require('morgan');
 const db = require('../db');
 
 tokenRouter.post('/', (request, response) => {
-  const user = request.body.username;
   const refreshToken = request.body.token;
 
   // check to see if there is a refresh token in the body
@@ -32,5 +31,5 @@ tokenRouter.post('/', (request, response) => {
 });
 
 const generateAccessToken = (user) => {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' });
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 };

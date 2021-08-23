@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 const requestLogger = (request, response, next) => {
   console.log('\n' + new Date().toLocaleString());
   //   console.log('Method:', request.method);
