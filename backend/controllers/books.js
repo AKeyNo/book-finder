@@ -5,14 +5,14 @@ const db = require('../db');
 const middleware = require('../utils/middleware');
 
 booksRouter.post(
-  '/read/',
+  '/read/:book_id',
   middleware.authenticateToken,
   async (request, response) => {
+    console.log(request.params);
     const user_id = request.user.user_id;
-    const book_id = request.body.book_id;
+    const { book_id } = request.params;
     const pages_read = request.body.pages_read;
-    const finished = request.body.finished;
-    let book;
+    let book, finished;
 
     console.log(
       `user_id ${user_id} is attempting to update book_id ${book_id}`
@@ -29,32 +29,38 @@ booksRouter.post(
       }
     } catch (e) {
       if (e === 'InvalidUserException') {
-        response.status(406).json({ error: `${user_id} does not exist!` });
+        return response
+          .status(406)
+          .json({ error: `${user_id} does not exist!` });
       } else {
-        response.status(406).json({ error: 'could not query database' });
+        return response.status(406).json({ error: 'could not query database' });
       }
-      return;
     }
 
     // check to see if the book is real probably using axios
     // if greater than the book's page count, throw an error
+    // also update finished status
     try {
       const bookInformation = await axios.get(
         'https://www.googleapis.com/books/v1/volumes/' + book_id
       );
       book = bookInformation.data.volumeInfo;
+
       if (pages_read > book.pageCount) {
         throw 'PageCountException';
+      } else if (pages_read == book.pageCount) {
+        finished = true;
+      } else {
+        finished = false;
       }
     } catch (e) {
       if (e === 'PageCountException') {
-        response.status(401).json({
+        return response.status(401).json({
           error: `${pages_read} is greater than ${book.title}'s ${book.pageCount} pages`,
         });
       } else {
-        response.status(401).json({ error: 'invalid book' });
+        return response.status(401).json({ error: 'invalid book' });
       }
-      return;
     }
 
     // check if that user_id has a book_id in the readlist table
