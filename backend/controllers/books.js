@@ -10,6 +10,7 @@ booksRouter.post('/read/', async (request, response) => {
   const book_id = request.body.book_id;
   const pages_read = request.body.pages_read;
   const finished = request.body.finished;
+  let book;
 
   console.log(`user_id ${user_id} is attempting to update book_id ${book_id}`);
 
@@ -20,20 +21,35 @@ booksRouter.post('/read/', async (request, response) => {
       [user_id]
     );
     if (parseInt(checkIDQuery.rows[0].count) === 0) {
-      await response.status(406).json({ error: `${user_id} does not exist!` });
-      return;
+      throw 'InvalidUserException';
     }
-  } catch (e) {}
+  } catch (e) {
+    if ((e = 'InvalidUserException')) {
+      await response.status(406).json({ error: `${user_id} does not exist!` });
+    } else {
+      await response.status(406).json({ error: 'could not query database' });
+    }
+    return;
+  }
 
   // check to see if the book is real probably using axios
+  // if greater than the book's page count, throw an error
   try {
-    await axios.get('https://www.googleapis.com/books/v1/volumes/' + book_id);
-    console.log(`successfully updated ${book_id} for ${user_id}`);
-    await response.status(200).json({
-      message: `successfully updated ${user_id}'s book entry for ${book_id}`,
-    });
+    const bookInformation = await axios.get(
+      'https://www.googleapis.com/books/v1/volumes/' + book_id
+    );
+    book = bookInformation.data.volumeInfo;
+    if (pages_read > book.pageCount) {
+      throw 'PageCountException';
+    }
   } catch (e) {
-    response.status(401).json({ error: 'invalid book' });
+    if (e === 'PageCountException') {
+      response.status(401).json({
+        error: `${pages_read} is greater than ${book.title}'s ${book.pageCount} pages`,
+      });
+    } else {
+      response.status(401).json({ error: 'invalid book' });
+    }
     return;
   }
 
@@ -54,6 +70,11 @@ booksRouter.post('/read/', async (request, response) => {
   } catch (e) {
     response.status(401).json({ error: 'readlist could not be updated' });
   }
+
+  console.log(`successfully updated ${book_id} for ${user_id}`);
+  response.status(200).json({
+    message: `successfully updated ${user_id}'s book entry for ${book_id}`,
+  });
 });
 
 module.exports = booksRouter;
