@@ -82,8 +82,10 @@ usersRouter.post(
     );
 
     // quick check to see if pages_read is invalid
-    if (!pages_read || isNaN(pages_read)) {
-      return response.status(401).json({ error: 'pages_read is not a number' });
+    if (!pages_read || isNaN(pages_read) || !Number.isInteger(pages_read)) {
+      return response
+        .status(401)
+        .json({ error: 'pages_read is not an integer' });
     } else if (pages_read < 0) {
       return response
         .status(401)
