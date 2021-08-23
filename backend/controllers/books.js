@@ -28,7 +28,7 @@ booksRouter.post(
         throw 'InvalidUserException';
       }
     } catch (e) {
-      if ((e = 'InvalidUserException')) {
+      if (e === 'InvalidUserException') {
         response.status(406).json({ error: `${user_id} does not exist!` });
       } else {
         response.status(406).json({ error: 'could not query database' });
