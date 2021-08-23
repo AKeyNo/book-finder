@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Creation of readList table
 CREATE TABLE IF NOT EXISTS readList (
-  book_id varchar(250) NOT NULL UNIQUE,
-  user_id INT NOT NULL UNIQUE,
+  book_id varchar(250) NOT NULL,
+  user_id INT NOT NULL,
   pages_read INT NOT NULL DEFAULT 0,
   finished BOOLEAN NOT NULL DEFAULT FALSE,
   CONSTRAINT fk_user

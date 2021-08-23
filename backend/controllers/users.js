@@ -53,6 +53,20 @@ usersRouter.post('/signup', async (request, response) => {
   }
 });
 
+// grabs readlist of the specific user
+usersRouter.get('/:user_id/read', async (request, response) => {
+  const { user_id } = request.params;
+  try {
+    const getReadListQuery = await db.query(
+      'SELECT * FROM readlist WHERE user_id=$1',
+      [user_id]
+    );
+    return response.status(200).json({ books: getReadListQuery.rows });
+  } catch (e) {
+    return response.status(400).json({ error: 'something went wrong...' });
+  }
+});
+
 usersRouter.post(
   '/read/:book_id',
   middleware.authenticateToken,
@@ -127,7 +141,10 @@ usersRouter.post(
         [book_id, user_id, pages_read, finished]
       );
     } catch (e) {
-      response.status(401).json({ error: 'readlist could not be updated' });
+      console.error(e);
+      return response
+        .status(401)
+        .json({ error: 'readlist could not be updated' });
     }
 
     console.log(`successfully updated ${book_id} for user_id ${user_id}`);
