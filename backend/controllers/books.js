@@ -25,9 +25,9 @@ booksRouter.post('/read/', async (request, response) => {
     }
   } catch (e) {
     if ((e = 'InvalidUserException')) {
-      await response.status(406).json({ error: `${user_id} does not exist!` });
+      response.status(406).json({ error: `${user_id} does not exist!` });
     } else {
-      await response.status(406).json({ error: 'could not query database' });
+      response.status(406).json({ error: 'could not query database' });
     }
     return;
   }
