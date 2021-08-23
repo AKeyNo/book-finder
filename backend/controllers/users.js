@@ -81,6 +81,15 @@ usersRouter.post(
       `user_id ${user_id} is attempting to update book_id ${book_id}`
     );
 
+    // quick check to see if pages_read is invalid
+    if (!pages_read || isNaN(pages_read)) {
+      return response.status(401).json({ error: 'pages_read is not a number' });
+    } else if (pages_read < 0) {
+      return response
+        .status(401)
+        .json({ error: 'pages_read cannot be less than 0' });
+    }
+
     // check if the id exists in the users table
     try {
       const checkIDQuery = await db.query(
@@ -111,10 +120,8 @@ usersRouter.post(
 
       if (pages_read > book.pageCount) {
         throw 'PageCountException';
-      } else if (pages_read == book.pageCount) {
-        finished = true;
       } else {
-        finished = false;
+        finished = pages_read == book.pageCount;
       }
     } catch (e) {
       if (e === 'PageCountException') {
