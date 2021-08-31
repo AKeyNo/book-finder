@@ -69,10 +69,10 @@ export const BookSearch = () => {
     setLoading(true);
     axios
       .get(
-        'https://www.googleapis.com/books/v1/volumes?maxResults=9&startIndex=' +
-          search.index +
-          '&q=' +
-          search.search
+        'http://localhost:3001/api/books/search/' +
+          search.search +
+          '/' +
+          search.index
       )
       .then((data) => {
         console.log(data.data);

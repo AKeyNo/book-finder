@@ -14,7 +14,7 @@ export const BookPage = () => {
     setLoading(true);
     console.log(id);
     axios
-      .get('https://www.googleapis.com/books/v1/volumes/' + id)
+      .get('http://localhost:3001/api/books/' + id)
       .then((data) => {
         console.log(data.data);
         if (data.data) {
@@ -32,5 +32,5 @@ export const BookPage = () => {
       });
   }, [id]);
 
-  return <div>{book ? book.volumeInfo.title : <CircularProgress />}</div>;
+  return <div>{book ? book.title : <CircularProgress />}</div>;
 };
