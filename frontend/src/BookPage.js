@@ -4,7 +4,15 @@ import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { Button, Collapse } from '@material-ui/core';
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
@@ -28,8 +36,10 @@ const useStyles = makeStyles({
 export const BookPage = () => {
   const classes = useStyles();
   const [book, setBook] = useState(null);
-  const [isCollapsed, setIsCollapsed] = useState(true);
   const [isFavorited, setIsFavorited] = useState(false);
+  const [status, setStatus] = useState(' ');
+  const [pagesRead, setPagesRead] = useState();
+  const [score, setScore] = useState(0);
   const { id } = useParams();
 
   useEffect(() => {
@@ -49,30 +59,34 @@ export const BookPage = () => {
     console.log('yo');
   }, [id]);
 
-  const handleCollapse = (event) => {
-    event.preventDefault();
-    setIsCollapsed(!isCollapsed);
-  };
-
   const handleFavorite = (event) => {
     event.preventDefault();
     setIsFavorited(!isFavorited);
+  };
+
+  const handleStatus = (event) => {
+    event.preventDefault();
+    setStatus(event.target.value);
+  };
+
+  const handlePagesRead = (event) => {
+    event.preventDefault();
+    setPagesRead(event.target.value);
+  };
+
+  const handleScore = (event) => {
+    event.preventDefault();
+    setScore(event.target.value);
   };
 
   const BookDescription = React.memo(() => {
     return (
       <>
         <Grid container item xs={12}>
-          <Collapse in={!isCollapsed} collapsedSize={200}>
+          <Typography variant='subtitle1'>
             <div dangerouslySetInnerHTML={{ __html: book.description }} />
-          </Collapse>
-
-          {/* {book.description.replace(/(<([^>]+)>)/gi, '')} */}
-        </Grid>
-        <Grid container item xs={12}>
-          <Button className={classes.changePage} onClick={handleCollapse}>
-            {isCollapsed ? '∨' : '∧'}
-          </Button>
+          </Typography>
+          {/* </Collapse> */}
         </Grid>
       </>
     );
@@ -93,7 +107,59 @@ export const BookPage = () => {
         >
           {isFavorited ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </Button>
+        <AddToList></AddToList>
       </div>
+    );
+  };
+
+  const AddToList = () => {
+    return (
+      <>
+        <Grid container spacing={1}>
+          <Grid container item xs={12}>
+            <FormControl>
+              <InputLabel>Status</InputLabel>
+              <Select value={status} onChange={handleStatus}>
+                <MenuItem value=' '>
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value='Reading'>Watching</MenuItem>
+                <MenuItem value='Plan to Read'>Plan to Read</MenuItem>
+                <MenuItem value='Dropped'>Dropped</MenuItem>
+                <MenuItem value='Finished'>Finished</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid container item xs={12}>
+            <TextField
+              id='pages-read'
+              label={`Page Read (${book.pageCount} total)`}
+              type='number'
+              value={pagesRead}
+              onChange={handlePagesRead}
+              autoFocus
+            />
+          </Grid>
+          <Grid container item xs={12}>
+            <FormControl>
+              <InputLabel>Score</InputLabel>
+              <Select value={score} onChange={handleScore}>
+                <MenuItem value='0'>0</MenuItem>
+                <MenuItem value='1'>1</MenuItem>
+                <MenuItem value='2'>2</MenuItem>
+                <MenuItem value='3'>3</MenuItem>
+                <MenuItem value='4'>4</MenuItem>
+                <MenuItem value='5'>5</MenuItem>
+                <MenuItem value='6'>6</MenuItem>
+                <MenuItem value='7'>7</MenuItem>
+                <MenuItem value='8'>8</MenuItem>
+                <MenuItem value='9'>9</MenuItem>
+                <MenuItem value='10'>10</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+      </>
     );
   };
 
@@ -107,7 +173,9 @@ export const BookPage = () => {
         <Grid container item direction='row' spacing={2} xs={7}>
           <Grid container item xs={12} />
           <Grid container item xs={12}>
-            {book.title}
+            <Typography variant='h4' gutterBottom>
+              {book.title}
+            </Typography>
           </Grid>
           <BookDescription />
           <Grid container item xs={12} />
@@ -117,6 +185,6 @@ export const BookPage = () => {
       </Grid>
     );
   }, [book, classes]);
-  // make it yourself
+
   return <>{book ? <BookInformation /> : <CircularProgress />}</>;
 };
