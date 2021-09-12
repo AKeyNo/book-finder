@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -7,6 +7,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
+axios.defaults.withCredentials = true;
+
+const loginUrl = 'http://localhost:4001/api/login';
 
 const useStyles = makeStyles((theme) => ({
   options: {
@@ -18,6 +22,9 @@ export const SignIn = () => {
   const classes = useStyles();
   const [signInOpen, setSignInOpen] = useState(false);
   const [signUpOpen, setSignUpOpen] = useState(false);
+  const username = useRef('');
+  const password = useRef('');
+  const token = useRef('');
 
   const handleSignInClickOpen = () => {
     setSignInOpen(true);
@@ -31,6 +38,23 @@ export const SignIn = () => {
   };
   const handleSignUpClose = () => {
     setSignUpOpen(false);
+  };
+
+  const handleSignInSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const results = await axios.post(loginUrl, {
+        username: username.current,
+        password: password.current,
+      });
+
+      token.current = results.data.accessToken;
+      setSignInOpen(false);
+    } catch (e) {
+      window.alert('Incorrect username or password!');
+      console.log(e);
+    }
   };
 
   const SignIn = () => {
@@ -57,6 +81,8 @@ export const SignIn = () => {
               label='Email Address'
               type='email'
               fullWidth
+              required
+              onChange={(e) => (username.current = e.target.value)}
             />
             <TextField
               autoFocus
@@ -65,13 +91,15 @@ export const SignIn = () => {
               label='Password'
               type='password'
               fullWidth
+              required
+              onChange={(e) => (password.current = e.target.value)}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleSignInClose} color='primary'>
               Cancel
             </Button>
-            <Button onClick={handleSignInClose} color='primary'>
+            <Button onClick={handleSignInSubmit} color='primary'>
               Sign In
             </Button>
           </DialogActions>
@@ -103,9 +131,9 @@ export const SignIn = () => {
             <TextField
               autoFocus
               margin='dense'
-              id='name'
-              label='Email Address'
-              type='email'
+              id='username'
+              label='Username'
+              type='text'
               fullWidth
             />
             <TextField

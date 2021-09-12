@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../db');
 
-loginRouter.get('/', async (request, response) => {
+loginRouter.post('/', async (request, response) => {
   const body = request.body;
   console.log(`${body.username} is attempting to login...`);
 
@@ -26,8 +26,16 @@ loginRouter.get('/', async (request, response) => {
 
   const userInfo = { user_id: user.user_id, username: user.username };
   const accessToken = generateAccessToken(userInfo);
-  const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
-  response.json({ accessToken, refreshToken });
+  const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: '7d',
+  });
+  response.cookie('refreshToken', refreshToken, {
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+    sameSite: 'strict',
+    path: '/',
+  });
+  response.json({ accessToken: accessToken });
 });
 
 const generateAccessToken = (user) => {
