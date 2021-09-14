@@ -2,11 +2,11 @@ require('dotenv').config();
 const tokenRouter = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { token } = require('morgan');
+// const { token } = require('morgan');
 const db = require('../db');
 
-tokenRouter.post('/', (request, response) => {
-  const refreshToken = request.body.token;
+tokenRouter.post('/', async (request, response) => {
+  const refreshToken = request.cookies.refreshToken;
 
   // check to see if there is a refresh token in the body
   if (refreshToken == null)
@@ -33,3 +33,5 @@ tokenRouter.post('/', (request, response) => {
 const generateAccessToken = (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 };
+
+module.exports = tokenRouter;

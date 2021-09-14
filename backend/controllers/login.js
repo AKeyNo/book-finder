@@ -26,9 +26,12 @@ loginRouter.post('/', async (request, response) => {
 
   const userInfo = { user_id: user.user_id, username: user.username };
   const accessToken = generateAccessToken(userInfo);
-  const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: '7d',
-  });
+  const refreshToken = generateRefreshToken(userInfo);
+  await db.query('UPDATE users SET token=$1 WHERE user_id=$2', [
+    refreshToken,
+    userInfo.user_id,
+  ]);
+
   response.cookie('refreshToken', refreshToken, {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     httpOnly: true,
@@ -42,4 +45,9 @@ const generateAccessToken = (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 };
 
+const generateRefreshToken = (user) => {
+  return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: '7d',
+  });
+};
 module.exports = loginRouter;
