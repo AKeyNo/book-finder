@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -7,10 +7,13 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
+import { useToken, useTokenUpdate } from './TokenContext';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 
-const loginUrl = 'http://localhost:4001/api/login';
+const loginURL = 'http://localhost:4001/api/login';
+const signupURL = 'http://localhost:4001/api/signup';
+const tokenURL = 'http://localhost:4001/api/token';
 
 const useStyles = makeStyles((theme) => ({
   options: {
@@ -20,17 +23,39 @@ const useStyles = makeStyles((theme) => ({
 
 export const SignIn = () => {
   const classes = useStyles();
+  const accessToken = useToken();
+  const updateAccessToken = useTokenUpdate();
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [signInOpen, setSignInOpen] = useState(false);
   const [signUpOpen, setSignUpOpen] = useState(false);
   const username = useRef('');
   const password = useRef('');
+  const confirmPassword = useRef('');
   const token = useRef('');
+
+  // get an access token if possible
+  useEffect(() => {
+    (async () => {
+      try {
+        const results = await axios.post(tokenURL);
+        updateAccessToken(results.data.accessToken);
+        setIsLoggedIn(true);
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+    // eslint-disable-next-line
+  }, []);
 
   const handleSignInClickOpen = () => {
     setSignInOpen(true);
   };
   const handleSignInClose = () => {
     setSignInOpen(false);
+    username.current = '';
+    password.current = '';
+    confirmPassword.current = '';
   };
 
   const handleSignUpClickOpen = () => {
@@ -38,23 +63,56 @@ export const SignIn = () => {
   };
   const handleSignUpClose = () => {
     setSignUpOpen(false);
+    username.current = '';
+    password.current = '';
+    confirmPassword.current = '';
   };
 
   const handleSignInSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const results = await axios.post(loginUrl, {
+      const results = await axios.post(loginURL, {
         username: username.current,
         password: password.current,
       });
 
       token.current = results.data.accessToken;
       setSignInOpen(false);
+      setIsLoggedIn(true);
     } catch (e) {
       window.alert('Incorrect username or password!');
-      console.log(e);
+      console.error(e);
     }
+  };
+
+  const handleSignUpSubmit = async (event) => {
+    event.preventDefault();
+
+    if (password.current !== confirmPassword.current) {
+      window.alert('Passwords are not the same!');
+      return;
+    }
+
+    try {
+      const results = await axios.post(signupURL, {
+        username: username.current,
+        password: password.current,
+      });
+
+      token.current = results.data.accessToken;
+      setSignUpOpen(false);
+      setIsLoggedIn(true);
+    } catch (e) {
+      window.alert('Unable to create an account, try again later.');
+      console.error(e);
+    }
+  };
+
+  const handleSignOutClick = async (event) => {
+    event.preventDefault();
+
+    console.log('sign out');
   };
 
   const SignIn = () => {
@@ -78,8 +136,8 @@ export const SignIn = () => {
               autoFocus
               margin='dense'
               id='name'
-              label='Email Address'
-              type='email'
+              label='Username'
+              type='text'
               fullWidth
               required
               onChange={(e) => (username.current = e.target.value)}
@@ -135,6 +193,8 @@ export const SignIn = () => {
               label='Username'
               type='text'
               fullWidth
+              autoComplete='off'
+              onChange={(e) => (username.current = e.target.value)}
             />
             <TextField
               autoFocus
@@ -143,6 +203,8 @@ export const SignIn = () => {
               label='Password'
               type='password'
               fullWidth
+              autoComplete='off'
+              onChange={(e) => (password.current = e.target.value)}
             />
             <TextField
               autoFocus
@@ -151,24 +213,33 @@ export const SignIn = () => {
               label='Confirm Password'
               type='password'
               fullWidth
+              autoComplete='off'
+              onChange={(e) => (confirmPassword.current = e.target.value)}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleSignUpClose} color='primary'>
               Cancel
             </Button>
-            <Button onClick={handleSignUpClose} color='primary'>
-              Subscribe
+            <Button onClick={handleSignUpSubmit} color='primary'>
+              Sign Up
             </Button>
           </DialogActions>
         </Dialog>
       </div>
     );
   };
+
   return (
-    <div className={classes.options}>
-      <SignIn />
-      <SignUp />
-    </div>
+    <>
+      {!isLoggedIn ? (
+        <div className={classes.options}>
+          <SignIn />
+          <SignUp />
+        </div>
+      ) : (
+        <Button onClick={handleSignOutClick}>Sign Out</Button>
+      )}
+    </>
   );
 };
