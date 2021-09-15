@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -30,6 +30,19 @@ export const Navbar = () => {
   // const [auth, setAuth] = useState(true);
   const auth = false;
   const open = Boolean(anchorEl);
+  const pages = ['about', 'search'];
+
+  // sets tab to the correct page
+  useEffect(() => {
+    const startingPage = window.location.href.toLowerCase();
+    for (let index = 0; index < pages.length; index++) {
+      if (startingPage.includes(pages[index])) {
+        setValue(index + 1);
+        return;
+      }
+    }
+    // eslint-disable-next-line
+  }, []);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
