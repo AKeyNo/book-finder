@@ -9,6 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
 import { useToken, useTokenUpdate } from './TokenContext';
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 axios.defaults.withCredentials = true;
 
 const loginURL = 'http://localhost:4001/api/login';
@@ -32,7 +33,6 @@ export const SignIn = () => {
   const username = useRef('');
   const password = useRef('');
   const confirmPassword = useRef('');
-  const token = useRef('');
 
   // get an access token if possible
   useEffect(() => {
@@ -77,7 +77,7 @@ export const SignIn = () => {
         password: password.current,
       });
 
-      token.current = results.data.accessToken;
+      updateAccessToken(results.data.accessToken);
       setSignInOpen(false);
       setIsLoggedIn(true);
     } catch (e) {
@@ -100,7 +100,7 @@ export const SignIn = () => {
         password: password.current,
       });
 
-      token.current = results.data.accessToken;
+      updateAccessToken(results.data.accessToken);
       setSignUpOpen(false);
       setIsLoggedIn(true);
     } catch (e) {
@@ -111,7 +111,7 @@ export const SignIn = () => {
 
   const handleSignOutClick = async (event) => {
     event.preventDefault();
-
+    console.log(accessToken);
     console.log('sign out');
   };
 
@@ -238,7 +238,10 @@ export const SignIn = () => {
           <SignUp />
         </div>
       ) : (
-        <Button onClick={handleSignOutClick}>Sign Out</Button>
+        <>
+          <Button>{jwt_decode(accessToken).username}</Button>
+          <Button onClick={handleSignOutClick}>Sign Out</Button>
+        </>
       )}
     </>
   );
