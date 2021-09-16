@@ -25,7 +25,10 @@ tokenRouter.post('/', async (request, response) => {
     if (err)
       return response.status(403).json({ error: 'an error has occurred...' });
 
-    const accessToken = generateAccessToken({ name: user.name });
+    const accessToken = generateAccessToken({
+      user_id: user.user_id,
+      username: user.username,
+    });
     response.json({ accessToken: accessToken });
   });
 });
