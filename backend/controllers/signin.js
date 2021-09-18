@@ -1,12 +1,12 @@
 require('dotenv').config();
-const loginRouter = require('express').Router();
+const signInRouter = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../db');
 
-loginRouter.post('/', async (request, response) => {
+signInRouter.post('/', async (request, response) => {
   const body = request.body;
-  console.log(`${body.username} is attempting to login...`);
+  console.log(`${body.username} is attempting to sign in...`);
 
   const userQuery = await db.query('SELECT * FROM USERS WHERE USERNAME=$1', [
     body.username,
@@ -32,6 +32,7 @@ loginRouter.post('/', async (request, response) => {
     userInfo.user_id,
   ]);
 
+  console.log(`${body.username} successfully signed in!`);
   response.cookie('refreshToken', refreshToken, {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     httpOnly: true,
@@ -50,4 +51,4 @@ const generateRefreshToken = (user) => {
     expiresIn: '7d',
   });
 };
-module.exports = loginRouter;
+module.exports = signInRouter;

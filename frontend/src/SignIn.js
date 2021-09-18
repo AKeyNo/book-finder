@@ -12,8 +12,9 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 axios.defaults.withCredentials = true;
 
-const loginURL = 'http://localhost:4001/api/login';
-const signupURL = 'http://localhost:4001/api/signup';
+const signInURL = 'http://localhost:4001/api/signin';
+const signUpURL = 'http://localhost:4001/api/signup';
+const signOutURL = 'http://localhost:4001/api/signout';
 const tokenURL = 'http://localhost:4001/api/token';
 
 const useStyles = makeStyles((theme) => ({
@@ -27,7 +28,7 @@ export const SignIn = () => {
   const accessToken = useToken();
   const updateAccessToken = useTokenUpdate();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const [signInOpen, setSignInOpen] = useState(false);
   const [signUpOpen, setSignUpOpen] = useState(false);
   const username = useRef('');
@@ -40,7 +41,7 @@ export const SignIn = () => {
       try {
         const results = await axios.post(tokenURL);
         updateAccessToken(results.data.accessToken);
-        setIsLoggedIn(true);
+        setIsSignedIn(true);
       } catch (e) {
         console.error(e);
       }
@@ -72,14 +73,14 @@ export const SignIn = () => {
     event.preventDefault();
 
     try {
-      const results = await axios.post(loginURL, {
+      const results = await axios.post(signInURL, {
         username: username.current,
         password: password.current,
       });
 
       updateAccessToken(results.data.accessToken);
       setSignInOpen(false);
-      setIsLoggedIn(true);
+      setIsSignedIn(true);
     } catch (e) {
       window.alert('Incorrect username or password!');
       console.error(e);
@@ -95,14 +96,14 @@ export const SignIn = () => {
     }
 
     try {
-      const results = await axios.post(signupURL, {
+      const results = await axios.post(signUpURL, {
         username: username.current,
         password: password.current,
       });
 
       updateAccessToken(results.data.accessToken);
       setSignUpOpen(false);
-      setIsLoggedIn(true);
+      setIsSignedIn(true);
     } catch (e) {
       window.alert('Unable to create an account, try again later.');
       console.error(e);
@@ -111,8 +112,10 @@ export const SignIn = () => {
 
   const handleSignOutClick = async (event) => {
     event.preventDefault();
-    console.log(accessToken);
-    console.log('sign out');
+    const signOutRequest = await axios.post(signOutURL, { accessToken });
+    updateAccessToken(null);
+    setIsSignedIn(false);
+    console.log(signOutRequest);
   };
 
   const SignIn = () => {
@@ -232,14 +235,14 @@ export const SignIn = () => {
 
   return (
     <>
-      {!isLoggedIn ? (
+      {!isSignedIn ? (
         <div className={classes.options}>
           <SignIn />
           <SignUp />
         </div>
       ) : (
         <>
-          <Button>{jwt_decode(accessToken).username}</Button>
+          <Button>{accessToken && jwt_decode(accessToken).username}</Button>
           <Button onClick={handleSignOutClick}>Sign Out</Button>
         </>
       )}

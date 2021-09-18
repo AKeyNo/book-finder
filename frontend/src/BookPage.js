@@ -13,6 +13,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
+import { useToken } from './TokenContext';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
@@ -35,6 +36,8 @@ const useStyles = makeStyles({
 
 export const BookPage = () => {
   const classes = useStyles();
+  const accessToken = useToken();
+
   const [book, setBook] = useState(null);
   const [isFavorited, setIsFavorited] = useState(false);
   const [status, setStatus] = useState(' ');
@@ -56,7 +59,6 @@ export const BookPage = () => {
         window.alert(error);
         setBook(null);
       });
-    console.log('yo');
   }, [id]);
 
   const handleFavorite = (event) => {
@@ -107,7 +109,7 @@ export const BookPage = () => {
         >
           {isFavorited ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </Button>
-        <AddToList></AddToList>
+        {accessToken ? <AddToList /> : <></>}
       </div>
     );
   };
