@@ -40,7 +40,7 @@ export const BookPage = () => {
 
   const [book, setBook] = useState(null);
   const [isFavorited, setIsFavorited] = useState(false);
-  const [status, setStatus] = useState(' ');
+  const [status, setStatus] = useState('Reading');
   const [pagesRead, setPagesRead] = useState();
   const [score, setScore] = useState(0);
   const { id } = useParams();
@@ -122,10 +122,7 @@ export const BookPage = () => {
             <FormControl>
               <InputLabel>Status</InputLabel>
               <Select value={status} onChange={handleStatus}>
-                <MenuItem value=' '>
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value='Reading'>Watching</MenuItem>
+                <MenuItem value='Reading'>Reading</MenuItem>
                 <MenuItem value='Plan to Read'>Plan to Read</MenuItem>
                 <MenuItem value='Dropped'>Dropped</MenuItem>
                 <MenuItem value='Finished'>Finished</MenuItem>
