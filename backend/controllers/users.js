@@ -25,18 +25,18 @@ usersRouter.get('/:user_id/read', async (request, response) => {
   }
 });
 
+// adds or updates a book the user has chosen
 usersRouter.post(
   '/read/:book_id',
   middleware.authenticateToken,
   async (request, response) => {
-    console.log(request.params);
-    const user_id = request.user.user_id;
     const { book_id } = request.params;
-    const pages_read = request.body.pages_read;
-    let book, finished;
+    const { user_id } = request.user;
+    const { pages_read, score, status } = request.body;
+    let book;
 
     console.log(
-      `user_id ${user_id} is attempting to update book_id ${book_id}`
+      `attempting to update user_id ${user_id}'s' is information for book_id ${book_id}`
     );
 
     // quick check to see if pages_read is invalid
@@ -48,6 +48,20 @@ usersRouter.post(
       return response
         .status(401)
         .json({ error: 'pages_read cannot be less than 0' });
+    }
+
+    // there are 4 statuses
+    // 0: Reading
+    // 1: Plan to Read
+    // 2: Completed
+    // 3: Paused
+    // 4: Dropped
+    if (status < 0 || status > 4) {
+      return response.status(401).json({ error: 'status is not valid' });
+    }
+
+    if (score < 0 || score > 10) {
+      return response.status(401).json({ error: 'score must be between 0-10' });
     }
 
     // check if the id exists in the users table
@@ -71,7 +85,7 @@ usersRouter.post(
 
     // check to see if the book is real probably using axios
     // if greater than the book's page count, throw an error
-    // also update finished status
+    // also update book status
     try {
       const bookInformation = await axios.get(
         'https://www.googleapis.com/books/v1/volumes/' + book_id
@@ -80,8 +94,6 @@ usersRouter.post(
 
       if (pages_read > book.pageCount) {
         throw 'PageCountException';
-      } else {
-        finished = pages_read == book.pageCount;
       }
     } catch (e) {
       if (e === 'PageCountException') {
@@ -98,14 +110,15 @@ usersRouter.post(
     // else update it
     try {
       await db.query(
-        'INSERT INTO readlist (book_id, user_id, pages_read, finished)\
-      VALUES ($1, $2, $3, $4)\
-      ON CONFLICT (book_id, user_id) DO UPDATE\
-      SET book_id=$1,\
-        user_id=$2,\
-        pages_read=$3,\
-        finished=$4',
-        [book_id, user_id, pages_read, finished]
+        'INSERT INTO readlist (book_id, user_id, pages_read, status)\
+        VALUES ($1, $2, $3, $4)\
+        ON CONFLICT (book_id, user_id) DO UPDATE\
+        SET book_id=$1,\
+          user_id=$2,\
+          pages_read=$3,\
+          score=$4,\
+          status=$5',
+        [book_id, user_id, pages_read, score, status]
       );
     } catch (e) {
       console.error(e);
