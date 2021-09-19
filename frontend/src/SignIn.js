@@ -112,7 +112,9 @@ export const SignIn = () => {
 
   const handleSignOutClick = async (event) => {
     event.preventDefault();
-    const signOutRequest = await axios.post(signOutURL, { accessToken });
+    const signOutRequest = await axios.post(signOutURL, null, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
     updateAccessToken(null);
     setIsSignedIn(false);
     console.log(signOutRequest);

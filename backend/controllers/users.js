@@ -65,7 +65,7 @@ usersRouter.post(
           .status(406)
           .json({ error: `${user_id} does not exist!` });
       } else {
-        return response.status(406).json({ error: 'could not query database' });
+        return response.status(500).json({ error: 'could not query database' });
       }
     }
 
@@ -85,11 +85,11 @@ usersRouter.post(
       }
     } catch (e) {
       if (e === 'PageCountException') {
-        return response.status(401).json({
+        return response.status(406).json({
           error: `${pages_read} is greater than ${book.title}'s ${book.pageCount} pages`,
         });
       } else {
-        return response.status(401).json({ error: 'invalid book' });
+        return response.status(406).json({ error: 'invalid book' });
       }
     }
 
@@ -110,7 +110,7 @@ usersRouter.post(
     } catch (e) {
       console.error(e);
       return response
-        .status(401)
+        .status(500)
         .json({ error: 'readlist could not be updated' });
     }
 

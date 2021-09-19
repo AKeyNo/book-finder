@@ -12,7 +12,7 @@ booksRouter.get('/search/:keywords/:index', async (request, response) => {
         '&q=' +
         keywords
     );
-    response.json(results.data);
+    response.status(200).json(results.data);
   } catch (e) {
     console.error(e);
   }

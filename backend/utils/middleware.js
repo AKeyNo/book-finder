@@ -12,12 +12,19 @@ const requestLogger = (request, response, next) => {
 const authenticateToken = (request, response, next) => {
   const authHeader = request.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
+  console.log(token);
   if (token == null)
     return response.status(401).json({ error: 'token missing' });
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
-    if (error) return response.status(403).json({ error: 'invalid token' });
+    if (error) return response.status(401).json({ error: 'invalid token' });
+    if (Date.now() / 1000 > user.exp)
+      return response
+        .status(403)
+        .json({ error: 'The access token has already been expired!' });
+
     request.user = user;
+    console.log(user);
     next();
   });
 };

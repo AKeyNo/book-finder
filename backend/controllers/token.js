@@ -18,12 +18,12 @@ tokenRouter.post('/', async (request, response) => {
     [refreshToken]
   );
   if (parseInt(tokenCheckQuery.rows[0].count) !== 1) {
-    return response.status(403).json({ error: 'something went wrong...' });
+    return response.status(500).json({ error: 'something went wrong...' });
   }
 
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
     if (err)
-      return response.status(403).json({ error: 'an error has occurred...' });
+      return response.status(500).json({ error: 'an error has occurred...' });
 
     const accessToken = generateAccessToken({
       user_id: user.user_id,

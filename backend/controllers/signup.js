@@ -10,7 +10,7 @@ signupRouter.post('/', async (request, response) => {
 
   if (body.username.length < 3 || body.password.length < 3) {
     console.error('username and password must have 3 more more characters');
-    return response.status(400).json({
+    return response.status(403).json({
       error: 'username and password must have 3 more more characters',
     });
   }
@@ -20,7 +20,7 @@ signupRouter.post('/', async (request, response) => {
   ]);
   if (existsQuery.rowCount >= 1) {
     console.error(`${body.username} has already been taken...`);
-    return response.status(400).json({
+    return response.status(409).json({
       error: `${body.username} has already been taken...`,
     });
   }
@@ -52,10 +52,12 @@ signupRouter.post('/', async (request, response) => {
       sameSite: 'strict',
       path: '/',
     });
-    response.json({ message: `${body.username} was created!`, accessToken });
+    response
+      .status(200)
+      .json({ message: `${body.username} was created!`, accessToken });
   } catch (error) {
     console.error(error);
-    return response.status(400).json({
+    return response.status(500).json({
       error: 'something went wrong...',
     });
   }
