@@ -32,22 +32,23 @@ usersRouter.post(
   async (request, response) => {
     const { book_id } = request.params;
     const { user_id } = request.user;
-    const { pages_read, score, status } = request.body;
+    const { pagesRead, score, status } = request.body;
     let book;
 
     console.log(
       `attempting to update user_id ${user_id}'s' is information for book_id ${book_id}`
     );
 
-    // quick check to see if pages_read is invalid
-    if (!pages_read || isNaN(pages_read) || !Number.isInteger(pages_read)) {
+    // quick check to see if pagesRead is invalid
+    if (!pagesRead || isNaN(pagesRead) || !Number.isInteger(pagesRead)) {
+      console.log(!pagesRead, isNaN(pagesRead), !Number.isInteger(pagesRead));
       return response
         .status(401)
-        .json({ error: 'pages_read is not an integer' });
-    } else if (pages_read < 0) {
+        .json({ error: 'pagesRead is not an integer' });
+    } else if (pagesRead < 0) {
       return response
         .status(401)
-        .json({ error: 'pages_read cannot be less than 0' });
+        .json({ error: 'pagesRead cannot be less than 0' });
     }
 
     // there are 4 statuses
@@ -63,7 +64,6 @@ usersRouter.post(
     if (score < 0 || score > 10) {
       return response.status(401).json({ error: 'score must be between 0-10' });
     }
-
     // check if the id exists in the users table
     try {
       const checkIDQuery = await db.query(
@@ -92,13 +92,13 @@ usersRouter.post(
       );
       book = bookInformation.data.volumeInfo;
 
-      if (pages_read > book.pageCount) {
+      if (pagesRead > book.pageCount) {
         throw 'PageCountException';
       }
     } catch (e) {
       if (e === 'PageCountException') {
         return response.status(406).json({
-          error: `${pages_read} is greater than ${book.title}'s ${book.pageCount} pages`,
+          error: `${pagesRead} is greater than ${book.title}'s ${book.pageCount} pages`,
         });
       } else {
         return response.status(406).json({ error: 'invalid book' });
@@ -110,15 +110,15 @@ usersRouter.post(
     // else update it
     try {
       await db.query(
-        'INSERT INTO readlist (book_id, user_id, pages_read, status)\
+        'INSERT INTO readlist (book_id, user_id, pagesRead, status)\
         VALUES ($1, $2, $3, $4)\
         ON CONFLICT (book_id, user_id) DO UPDATE\
         SET book_id=$1,\
           user_id=$2,\
-          pages_read=$3,\
+          pagesRead=$3,\
           score=$4,\
           status=$5',
-        [book_id, user_id, pages_read, score, status]
+        [book_id, user_id, pagesRead, score, status]
       );
     } catch (e) {
       console.error(e);

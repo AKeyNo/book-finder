@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS readList (
   book_id VARCHAR(250) NOT NULL,
   user_id INT NOT NULL,
-  pages_read INT NOT NULL DEFAULT 0,
+  pagesRead INT NOT NULL DEFAULT 0,
   score INT NOT NULL DEFAULT 0 CHECK (score >= 0 AND score <= 10),
   status INT NOT NULL DEFAULT 0,
   CONSTRAINT fk_user
