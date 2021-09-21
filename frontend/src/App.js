@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Navbar } from './Navbar';
-import { Home } from './Home';
-import { About } from './About';
-import { BookSearch } from './BookSearch';
-import { BookPage } from './BookPage';
+import { Navbar } from './components/Navbar';
+import { Home } from './pages/Home';
+import { About } from './pages/About';
+import { BookSearch } from './pages/BookSearch';
+import { BookPage } from './pages/BookPage';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import { TokenProvider } from './TokenContext';
+import { TokenProvider } from './services/TokenContext';
 import CssBaseline from '@material-ui/core/CssBaseline';
 require('dotenv').config();
 
