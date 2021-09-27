@@ -25,6 +25,29 @@ usersRouter.get('/:user_id/read', async (request, response) => {
   }
 });
 
+// grab the information for a user's rating of a specific book
+usersRouter.get('/:user_id/:book_id', async (request, response) => {
+  const { user_id, book_id } = request.params;
+  console.log(user_id, book_id);
+
+  try {
+    const getUserInfoBook = await db.query(
+      'SELECT * FROM readlist WHERE user_id=$1 AND book_id=$2',
+      [user_id, book_id]
+    );
+    if (getUserInfoBook.rowCount == 1) {
+      return response.status(200).json(getUserInfoBook.rows[0]);
+    } else if (getUserInfoBook.rowCount == 0) {
+      return response
+        .status(200)
+        .json({ book_id, user_id, pagesread: 0, score: 0, status: -1 });
+    }
+  } catch (e) {
+    console.error(e);
+    return response.status(400).json({ error: 'something went wrong...' });
+  }
+});
+
 // adds or updates a book the user has chosen
 usersRouter.post(
   '/read/:book_id',

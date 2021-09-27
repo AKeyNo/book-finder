@@ -17,6 +17,7 @@ import {
 import { useToken } from '../services/TokenContext';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import jwt_decode from 'jwt-decode';
 
 const useStyles = makeStyles({
   bookImage: {
@@ -48,7 +49,6 @@ const useStyles = makeStyles({
 export const BookPage = () => {
   const classes = useStyles();
   const accessToken = useToken();
-
   const [book, setBook] = useState(null);
   const [isFavorited, setIsFavorited] = useState(false);
   const [status, setStatus] = useState(0);
@@ -65,11 +65,33 @@ export const BookPage = () => {
           setBook(data.data);
         }
       })
+      .then(() => {})
       .catch((error) => {
         window.alert(error);
         setBook(null);
       });
-  }, [id]);
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (accessToken == null) return;
+    axios
+      .get(
+        `http://localhost:3001/api/users/${
+          jwt_decode(accessToken).user_id
+        }/${id}`
+      )
+      .then((data) => {
+        const userInfoOnBook = data.data;
+        if (data.data.status !== -1) {
+          console.log(data.data);
+          setStatus(userInfoOnBook.status);
+          setPagesRead(userInfoOnBook.pagesread);
+          setScore(userInfoOnBook.score);
+        }
+      });
+    // eslint-disable-next-line
+  }, [accessToken]);
 
   const handleFavorite = (event) => {
     event.preventDefault();
@@ -93,7 +115,7 @@ export const BookPage = () => {
   const handleSubmitClicked = async (event) => {
     event.preventDefault();
 
-    const submitRequest = await axios.post(
+    await axios.post(
       `http://localhost:3001/api/users/read/${id}`,
       { pagesRead, status, score },
       {
