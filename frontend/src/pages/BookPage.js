@@ -12,7 +12,7 @@ import { AddToList } from '../components/books/AddToList';
 
 const useStyles = makeStyles({
   loading: {
-    justifyContent: 'center',
+    textAlign: 'center',
   },
 });
 
@@ -30,7 +30,6 @@ export const BookPage = () => {
     axios
       .get(`http://localhost:3001/api/books/${id}`)
       .then((data) => {
-        console.log(data.data);
         if (data.data) {
           setBook(data.data);
         }
@@ -54,7 +53,6 @@ export const BookPage = () => {
       .then((data) => {
         const userInfoOnBook = data.data;
         if (data.data.status !== -1) {
-          console.log(data.data);
           setStatus(userInfoOnBook.status);
           setPagesRead(userInfoOnBook.pagesread);
           setScore(userInfoOnBook.score);
@@ -132,7 +130,9 @@ export const BookPage = () => {
           <Grid container item xs={false} sm={1} />
         </Grid>
       ) : (
-        <CircularProgress className={classes.loading} />
+        <div className={classes.loading}>
+          <CircularProgress />
+        </div>
       )}
     </>
   );

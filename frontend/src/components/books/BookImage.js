@@ -22,7 +22,6 @@ const useStyles = makeStyles({
 
 export const BookImage = ({ book, handleFavorite, isFavorited }) => {
   const classes = useStyles();
-  console.log(book);
   return (
     <div>
       {book ? (
