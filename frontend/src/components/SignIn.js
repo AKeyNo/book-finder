@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { useToken, useTokenUpdate } from '../services/TokenContext';
 import axios from 'axios';
@@ -244,7 +245,12 @@ export const SignIn = () => {
         </div>
       ) : (
         <>
-          <Button>{accessToken && jwt_decode(accessToken).username}</Button>
+          <Link
+            to={`/profile/${jwt_decode(accessToken).user_id}`}
+            style={{ textDecoration: 'none' }}
+          >
+            <Button>{accessToken && jwt_decode(accessToken).username}</Button>
+          </Link>
           <Button onClick={handleSignOutClick}>Sign Out</Button>
         </>
       )}
