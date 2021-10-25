@@ -32,6 +32,7 @@ export const SignIn = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [signInOpen, setSignInOpen] = useState(false);
   const [signUpOpen, setSignUpOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const username = useRef('');
   const password = useRef('');
   const confirmPassword = useRef('');
@@ -49,6 +50,11 @@ export const SignIn = () => {
     })();
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (!accessToken) return setUser(null);
+    setUser(jwt_decode(accessToken));
+  }, [accessToken]);
 
   const handleSignInClickOpen = () => {
     setSignInOpen(true);
@@ -246,10 +252,10 @@ export const SignIn = () => {
       ) : (
         <>
           <Link
-            to={`/profile/${jwt_decode(accessToken).user_id}`}
+            to={user ? `/profile/${user.user_id}` : '/'}
             style={{ textDecoration: 'none' }}
           >
-            <Button>{accessToken && jwt_decode(accessToken).username}</Button>
+            <Button>{user && user.username}</Button>
           </Link>
           <Button onClick={handleSignOutClick}>Sign Out</Button>
         </>

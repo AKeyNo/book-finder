@@ -114,72 +114,62 @@ export const BookSearch = () => {
   // returns a 3x3 grid that displays what is inside books
   const BookInformation = useCallback(() => {
     if (loading) return <></>;
-    else {
-      return (
-        <Grid
-          container
-          direction='row'
-          justifyContent='center'
-          alignItems='center'
-          spacing={10}
-        >
-          {books.map((book) => {
-            const bookInformation = book.volumeInfo;
-            console.log(bookInformation.id);
-            return (
-              <Grid className={classes.gridItem} item xs={4} key={book.id}>
-                <Paper
-                  className={classes.paper}
-                  elevation={0}
-                  variant='outlined'
-                >
-                  <Link to={book.id !== undefined ? '/book/' + book.id : '/'}>
-                    <img
-                      className={classes.bookImage}
-                      src={
-                        bookInformation.imageLinks !== undefined
-                          ? bookInformation.imageLinks.thumbnail
-                          : 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Missing.png/440px-Missing.png'
-                      }
-                      alt={bookInformation.title}
-                    />
-                  </Link>
+    return (
+      <Grid
+        container
+        direction='row'
+        justifyContent='center'
+        alignItems='center'
+        spacing={10}
+      >
+        {books.map((book) => {
+          const bookInformation = book.volumeInfo;
+          console.log(bookInformation.id);
+          return (
+            <Grid className={classes.gridItem} item xs={4} key={book.id}>
+              <Paper className={classes.paper} elevation={0} variant='outlined'>
+                <Link to={book.id !== undefined ? '/book/' + book.id : '/'}>
+                  <img
+                    className={classes.bookImage}
+                    src={
+                      bookInformation.imageLinks !== undefined
+                        ? bookInformation.imageLinks.thumbnail
+                        : 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Missing.png/440px-Missing.png'
+                    }
+                    alt={bookInformation.title}
+                  />
+                </Link>
+                <Typography className={classes.title} variant='h6' gutterBottom>
+                  {bookInformation.title}
+                </Typography>
+
+                {bookInformation.authors !== undefined ? (
                   <Typography
-                    className={classes.title}
-                    variant='h6'
+                    className={classes.authors}
+                    variant='subtitle1'
                     gutterBottom
                   >
-                    {bookInformation.title}
+                    {bookInformation.authors.join(', ')}
                   </Typography>
-
-                  {bookInformation.authors !== undefined ? (
-                    <Typography
-                      className={classes.authors}
-                      variant='subtitle1'
-                      gutterBottom
-                    >
-                      {bookInformation.authors.join(', ')}
-                    </Typography>
-                  ) : (
-                    <Typography
-                      className={classes.authors}
-                      variant='subtitle2'
-                      gutterBottom
-                    >
-                      Unknown Author
-                    </Typography>
-                  )}
+                ) : (
                   <Typography
-                    className={classes.description}
-                    variant='body1'
-                  ></Typography>
-                </Paper>
-              </Grid>
-            );
-          })}
-        </Grid>
-      );
-    }
+                    className={classes.authors}
+                    variant='subtitle2'
+                    gutterBottom
+                  >
+                    Unknown Author
+                  </Typography>
+                )}
+                <Typography
+                  className={classes.description}
+                  variant='body1'
+                ></Typography>
+              </Paper>
+            </Grid>
+          );
+        })}
+      </Grid>
+    );
   }, [books, classes, loading]);
 
   return (

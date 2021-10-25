@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { SignIn } from './SignIn';
+import { SignIn } from './Authentication';
 import { IconButton, Menu, MenuItem } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { makeStyles } from '@material-ui/core/styles';
