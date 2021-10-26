@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const SignIn = () => {
+export const Authentication = () => {
   const classes = useStyles();
   const accessToken = useToken();
   const updateAccessToken = useTokenUpdate();

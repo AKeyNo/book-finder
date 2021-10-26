@@ -96,8 +96,7 @@ export const BookPage = () => {
     <>
       {book ? (
         <Grid container spacing={8}>
-          <Grid container item xs={false} sm={1} />
-          <Grid container justifyContent={'center'} item xs={3}>
+          <Grid container justifyContent={'center'} item xs={4}>
             <BookImage
               book={book}
               isFavorited={isFavorited}
@@ -116,7 +115,7 @@ export const BookPage = () => {
               />
             ) : null}
           </Grid>
-          <Grid container item direction='row' spacing={2} xs={7}>
+          <Grid container item direction='row' spacing={2} xs={8}>
             <Grid container item xs={12} />
             <Grid container item xs={12}>
               <Typography variant='h4' gutterBottom>
@@ -126,8 +125,7 @@ export const BookPage = () => {
             <BookDescription book={book} />
             <Grid container item xs={12} />
           </Grid>
-          <Grid container justifyContent={'center'} item xs={6}></Grid>
-          <Grid container item xs={false} sm={1} />
+          <Grid container justifyContent='center' item xs={6}></Grid>
         </Grid>
       ) : (
         <div className={classes.loading}>

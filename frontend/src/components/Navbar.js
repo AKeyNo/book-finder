@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { SignIn } from './Authentication';
-import { IconButton, Menu, MenuItem } from '@material-ui/core';
+import { Authentication } from './Authentication';
+import { Grid, IconButton, Menu, MenuItem } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -13,6 +13,11 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+  },
+  authenticate: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    textAlign: 'flex-end',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -59,42 +64,54 @@ export const Navbar = () => {
   return (
     <AppBar position='static' color='default'>
       <Toolbar>
-        <Typography variant='h6' className={classes.title}>
-          Book Finder
-        </Typography>
-        {!auth ? (
-          <SignIn />
-        ) : (
-          <div>
-            <IconButton
-              aria-label='account of current user'
-              aria-controls='menu-appbar'
-              aria-haspopup='true'
-              onClick={handleMenu}
-              color='inherit'
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id='menu-appbar'
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={open}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-            </Menu>
-          </div>
-        )}
+        <Grid
+          container
+          direction='row'
+          alignItems='center'
+          justifyContent='flex-end'
+        >
+          <Grid item xs={1} md={5} />
+          <Grid container item xs={10} md={2}>
+            <Typography variant='h6' className={classes.title}>
+              Book Finder
+            </Typography>
+          </Grid>
+          <Grid item className={classes.authenticate} xs={1} md={5}>
+            {!auth ? (
+              <Authentication />
+            ) : (
+              <div>
+                <IconButton
+                  aria-label='account of current user'
+                  aria-controls='menu-appbar'
+                  aria-haspopup='true'
+                  onClick={handleMenu}
+                  color='inherit'
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id='menu-appbar'
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                </Menu>
+              </div>
+            )}
+          </Grid>
+        </Grid>
       </Toolbar>
       <Tabs value={value} onChange={handleChangeTabs}>
         <Tab label='Home' to='/' component={Link} />

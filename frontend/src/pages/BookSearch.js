@@ -17,9 +17,10 @@ const useStyles = makeStyles({
     overflow: 'hidden',
   },
   bookSearch: {
-    textAlign: 'center',
     margin: 16,
-    marginBottom: 0,
+    display: 'block',
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
   bookImage: {
     margin: 'auto',
@@ -179,22 +180,22 @@ export const BookSearch = () => {
         onSubmit={handleSubmitSearch}
         noValidate
         autoComplete='off'
+        justifyContent='center'
       >
         <TextField
           id='standard-basic'
           label='Enter book name'
           onChange={(e) => setInput(e.target.value)}
         />
-        <Button type='submit'>Submit</Button>
+        <Button type='submit'>Search</Button>
+        <div style={{ textAlign: 'center' }}>
+          <img
+            className={classes.bookSearch}
+            src={'https://books.google.com/googlebooks/images/poweredby.png'}
+            alt={'Google Books service'}
+          />
+        </div>
       </form>
-
-      <div style={{ textAlign: 'center' }}>
-        <img
-          className={classes.bookSearch}
-          src={'https://books.google.com/googlebooks/images/poweredby.png'}
-          alt={'Google Books service'}
-        />
-      </div>
 
       <Grid container spacing={1}>
         <Grid container item xs={false} sm={1} />
