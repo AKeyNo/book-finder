@@ -16,11 +16,35 @@ usersRouter.get('/:user_id/read', async (request, response) => {
   const { user_id } = request.params;
   try {
     const getReadListQuery = await db.query(
-      'SELECT * FROM readlist WHERE user_id=$1',
+      'SELECT book_id, pagesread, score, status FROM readlist WHERE user_id=$1',
       [user_id]
     );
-    return response.status(200).json({ books: getReadListQuery.rows });
+
+    const booksReadInformation = await getReadListQuery.rows.map(
+      async (book) => {
+        const bookQuery = await axios.get(
+          `https://www.googleapis.com/books/v1/volumes/${book.book_id}`
+        );
+
+        const bookInformation = bookQuery.data.volumeInfo;
+
+        return {
+          book_id: book.book_id,
+          title: bookInformation.title,
+          image: bookInformation.imageLinks
+            ? bookInformation.imageLinks.thumbnail
+            : null,
+          score: book.score,
+          status: book.status,
+        };
+      }
+    );
+    return response
+      .status(200)
+      .json({ books: await Promise.all(booksReadInformation) });
+    // return response.status(200).json(await Promise.all(booksReadInformation));
   } catch (e) {
+    console.log(e);
     return response.status(400).json({ error: 'something went wrong...' });
   }
 });
