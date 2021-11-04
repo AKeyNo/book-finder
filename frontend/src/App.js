@@ -32,7 +32,7 @@ function App() {
             alignItems='center'
             spacing={10}
           >
-            <Grid container item xs={0} sm={1} md={2} />
+            <Grid container item xs={false} sm={1} md={2} />
             <Grid container item xs={12} sm={10} md={8}>
               <Switch>
                 <Route exact path='/'>

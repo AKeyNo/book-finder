@@ -76,7 +76,7 @@ export const BookSearch = () => {
           search.index
       )
       .then((data) => {
-        console.log(data.data);
+        // console.log(data.data);
         if (data.data.totalItems > 0) {
           setBooks(data.data.items);
           // console.log(book.imageLinks);
@@ -125,7 +125,7 @@ export const BookSearch = () => {
       >
         {books.map((book) => {
           const bookInformation = book.volumeInfo;
-          console.log(bookInformation.id);
+          // console.log(bookInformation.id);
           return (
             <Grid className={classes.gridItem} item xs={4} key={book.id}>
               <Paper className={classes.paper} elevation={0} variant='outlined'>
@@ -180,7 +180,6 @@ export const BookSearch = () => {
         onSubmit={handleSubmitSearch}
         noValidate
         autoComplete='off'
-        justifyContent='center'
       >
         <TextField
           id='standard-basic'

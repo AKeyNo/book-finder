@@ -7,9 +7,9 @@ export const BooksRead = ({ books }) => {
   const classes = useStyles();
 
   const BookList = () => {
-    return books.map((book) => {
+    return books.map((book, index) => {
       return (
-        <Grid item xs={12} key={book.id}>
+        <Grid item xs={12} key={index}>
           <Paper elevation={0} variant='outlined'>
             {book.title}
           </Paper>
