@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
   user_id INT NOT NULL,
   username VARCHAR(250) NOT NULL UNIQUE,
   hashedPassword VARCHAR(250) NOT NULL,
+  summary VARCHAR(250) NOT NULL,
   token VARCHAR(250),
   PRIMARY KEY (user_id)
 );

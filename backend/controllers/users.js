@@ -4,11 +4,41 @@ const db = require('../db');
 const axios = require('axios');
 const middleware = require('../utils/middleware');
 
-usersRouter.get('/', async (request, response) => {
-  const results = await db.query('SELECT user_id, username FROM USERS');
-  console.log(results.rows);
+// usersRouter.get('/', async (request, response) => {
+//   const results = await db.query('SELECT user_id, username FROM USERS');
+//   console.log(results.rows);
 
-  response.json(results.rows);
+//   response.json(results.rows);
+// });
+
+// grabs the related profile data from a user
+usersRouter.get('/:user_id/information', async (request, response) => {
+  const { user_id } = request.params;
+
+  try {
+    const getProfileInformationQuery = await db.query(
+      'SELECT summary FROM users WHERE user_id=$1',
+      [user_id]
+    );
+
+    return response
+      .status(200)
+      .json({ summary: getProfileInformationQuery.rows[0].summary });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+// grabs the profile picture of the user
+usersRouter.get('/:user_id/picture', async (request, response) => {
+  const { user_id } = request.params;
+
+  try {
+    console.log();
+    response.sendFile(`./db/pictures/profiles/${user_id}.png`, { root: '.' });
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 // grabs readlist of the specific user
