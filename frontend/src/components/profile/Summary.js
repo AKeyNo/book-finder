@@ -1,35 +1,47 @@
-import { makeStyles, Paper } from '@material-ui/core';
+import { makeStyles, Paper, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const useStyles = makeStyles((theme) => ({}));
+const useStyles = makeStyles((theme) => ({
+  profilePicture: {
+    height: '200px',
+    width: '200px',
+  },
+  information: {
+    textAlign: 'center',
+  },
+}));
 
 export const Summary = ({ user }) => {
   const classes = useStyles();
-  const [summary, setSummary] = useState();
+  const [profileInformation, setProfileInformation] = useState({});
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3001/api/users/${user}/information`)
-      .then((data) => {
-        if (data.data) {
-          console.log(data.data.summary);
-          setSummary(data.data.summary);
-        }
-      })
-      .catch((error) => {
-        window.alert(error);
-      });
+    const fetchProfileInformation = async () => {
+      const result = await axios.get(
+        `http://localhost:3001/api/users/${user}/information`
+      );
+      setProfileInformation(result.data);
+      console.log(profileInformation.username);
+    };
+
+    fetchProfileInformation();
     // eslint-disable-next-line
   }, []);
 
   return (
     <Paper>
-      {summary}
       <img
         src={`http://localhost:3001/api/users/${user}/picture`}
         alt='profile'
+        className={classes.profilePicture}
       />
+      <Typography className={classes.information}>
+        <br />
+        {profileInformation ? profileInformation.username : null}
+        <br />
+        {profileInformation.summary}
+      </Typography>
     </Paper>
   );
 };

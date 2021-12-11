@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const db = require('../db');
 const axios = require('axios');
 const middleware = require('../utils/middleware');
+const fs = require('fs');
 
 // usersRouter.get('/', async (request, response) => {
 //   const results = await db.query('SELECT user_id, username FROM USERS');
@@ -17,13 +18,17 @@ usersRouter.get('/:user_id/information', async (request, response) => {
 
   try {
     const getProfileInformationQuery = await db.query(
-      'SELECT summary FROM users WHERE user_id=$1',
+      'SELECT summary, username FROM users WHERE user_id=$1',
       [user_id]
     );
 
+    let profileInformation = getProfileInformationQuery.rows[0];
     return response
       .status(200)
-      .json({ summary: getProfileInformationQuery.rows[0].summary });
+      .json({
+        username: profileInformation.username,
+        summary: profileInformation.summary,
+      });
   } catch (e) {
     console.log(e);
   }
@@ -35,7 +40,11 @@ usersRouter.get('/:user_id/picture', async (request, response) => {
 
   try {
     console.log();
-    response.sendFile(`./db/pictures/profiles/${user_id}.png`, { root: '.' });
+    if (fs.existsSync(`./db/pictures/profiles/${user_id}.png`)) {
+      response.sendFile(`./db/pictures/profiles/${user_id}.png`, { root: '.' });
+    } else {
+      response.sendFile(`./db/pictures/profiles/missingpfp.png`, { root: '.' });
+    }
   } catch (e) {
     console.log(e);
   }
