@@ -1,4 +1,4 @@
-import { makeStyles, Paper, Typography } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -30,18 +30,18 @@ export const Summary = ({ user }) => {
   }, []);
 
   return (
-    <Paper>
-      <img
-        src={`http://localhost:3001/api/users/${user}/picture`}
-        alt='profile'
-        className={classes.profilePicture}
-      />
+    <>
       <Typography className={classes.information}>
+        <img
+          src={`http://localhost:3001/api/users/${user}/picture`}
+          alt='profile'
+          className={classes.profilePicture}
+        />
         <br />
         {profileInformation ? profileInformation.username : null}
         <br />
         {profileInformation.summary}
       </Typography>
-    </Paper>
+    </>
   );
 };

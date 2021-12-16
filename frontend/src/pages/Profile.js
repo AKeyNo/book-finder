@@ -5,13 +5,13 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { BooksRead } from '../components/profile/BooksRead';
 import { Summary } from '../components/profile/Summary';
-import { useToken, useTokenUpdate } from '../services/TokenContext';
+// import { useToken, useTokenUpdate } from '../services/TokenContext';
 // import axios from 'axios';
 
 export const Profile = () => {
   const { user_id } = useParams();
-  const accessToken = useToken();
-  const updateAccessToken = useTokenUpdate();
+  // const accessToken = useToken();
+  // const updateAccessToken = useTokenUpdate();
   const [books, setBooks] = useState(null);
 
   useEffect(() => {

@@ -5,6 +5,8 @@ const axios = require('axios');
 const middleware = require('../utils/middleware');
 const fs = require('fs');
 
+const STATUS = ['Reading', 'Plan to Read', 'Completed', 'Paused', 'Dropped'];
+
 // usersRouter.get('/', async (request, response) => {
 //   const results = await db.query('SELECT user_id, username FROM USERS');
 //   console.log(results.rows);
@@ -23,12 +25,10 @@ usersRouter.get('/:user_id/information', async (request, response) => {
     );
 
     let profileInformation = getProfileInformationQuery.rows[0];
-    return response
-      .status(200)
-      .json({
-        username: profileInformation.username,
-        summary: profileInformation.summary,
-      });
+    return response.status(200).json({
+      username: profileInformation.username,
+      summary: profileInformation.summary,
+    });
   } catch (e) {
     console.log(e);
   }
@@ -70,11 +70,12 @@ usersRouter.get('/:user_id/read', async (request, response) => {
         return {
           book_id: book.book_id,
           title: bookInformation.title,
+          authors: bookInformation.authors,
           image: bookInformation.imageLinks
             ? bookInformation.imageLinks.thumbnail
             : null,
           score: book.score,
-          status: book.status,
+          status: STATUS[book.status],
         };
       }
     );
