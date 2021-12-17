@@ -27,18 +27,22 @@ export const BookPage = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3001/api/books/${id}`)
-      .then((data) => {
-        if (data.data) {
-          setBook(data.data);
+    const fetchBookInformation = async () => {
+      try {
+        const bookInformation = await axios.get(
+          `http://localhost:3001/api/books/${id}`
+        );
+
+        if (bookInformation.data) {
+          setBook(bookInformation.data);
         }
-      })
-      .then(() => {})
-      .catch((error) => {
-        window.alert(error);
+      } catch (e) {
+        window.alert('ERROR: Unable to fetch book information.');
         setBook(null);
-      });
+      }
+    };
+
+    fetchBookInformation();
     // eslint-disable-next-line
   }, []);
 

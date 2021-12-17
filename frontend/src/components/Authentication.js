@@ -39,15 +39,17 @@ export const Authentication = () => {
 
   // get an access token if possible
   useEffect(() => {
-    (async () => {
+    const authenticateUser = async () => {
       try {
-        const results = await axios.post(tokenURL);
-        updateAccessToken(results.data.accessToken);
+        const authenticateUserQuery = await axios.post(tokenURL);
+        updateAccessToken(authenticateUserQuery.data.accessToken);
         setIsSignedIn(true);
       } catch (e) {
         console.error(e);
       }
-    })();
+    };
+
+    authenticateUser();
     // eslint-disable-next-line
   }, []);
 

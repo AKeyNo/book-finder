@@ -15,21 +15,22 @@ export const Profile = () => {
   const [books, setBooks] = useState(null);
 
   useEffect(() => {
-    (async () => {
-      await axios
-        .get(`http://localhost:3001/api/users/${user_id}/read`)
-        .then((data) => {
-          if (data.data) {
-            setBooks(data.data.books);
-            // console.log(data.data);
-          }
-        })
-        .catch((error) => {
-          window.alert(error);
-          // setBooks(null);
-        });
-    })();
+    const fetchUserReadList = async () => {
+      try {
+        const readListQuery = await axios.get(
+          `http://localhost:3001/api/users/${user_id}/read`
+        );
 
+        if (readListQuery) {
+          setBooks(readListQuery.data.books);
+        }
+      } catch (e) {
+        window.alert(`ERROR: Could not query read list for ${user_id}`);
+        console.log(e);
+      }
+    };
+
+    fetchUserReadList();
     // eslint-disable-next-line
   }, []);
 

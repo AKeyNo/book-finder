@@ -61,37 +61,38 @@ export const BookSearch = () => {
   // when search gets updated through either a page change or search change,
   // updates the books to include new book results
   useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        setLoading(true);
+        const booksQuery = await axios.get(
+          'http://localhost:3001/api/books/search/' +
+            search.search +
+            '/' +
+            search.index
+        );
+        const queriedBooks = booksQuery.data;
+
+        if (queriedBooks.totalItems > 0) {
+          setBooks(queriedBooks.items);
+        } else {
+          setBooks(null);
+          window.alert(search + ' did not return any results.');
+        }
+      } catch (e) {
+        console.log(e);
+        window.alert(`ERROR: Could not query books for ${search}!`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     // makes sure that books don't load in from null when the page loads
     if (firstUpdate.current) {
       firstUpdate.current = false;
       return;
     }
 
-    setLoading(true);
-    axios
-      .get(
-        'http://localhost:3001/api/books/search/' +
-          search.search +
-          '/' +
-          search.index
-      )
-      .then((data) => {
-        // console.log(data.data);
-        if (data.data.totalItems > 0) {
-          setBooks(data.data.items);
-          // console.log(book.imageLinks);
-        } else {
-          setBooks(null);
-          window.alert(search + ' did not return any results.');
-        }
-      })
-      .catch((error) => {
-        window.alert(error);
-        setBooks(null);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    fetchBooks();
   }, [search]);
 
   // handles when the user submits a search

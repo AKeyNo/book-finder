@@ -18,11 +18,16 @@ export const Summary = ({ user }) => {
 
   useEffect(() => {
     const fetchProfileInformation = async () => {
-      const result = await axios.get(
-        `http://localhost:3001/api/users/${user}/information`
-      );
-      setProfileInformation(result.data);
-      console.log(profileInformation.username);
+      try {
+        const result = await axios.get(
+          `http://localhost:3001/api/users/${user}/information`
+        );
+
+        setProfileInformation(result.data);
+      } catch (e) {
+        window.alert(`ERROR: Could not query ${user}'s summmary`);
+        console.log(e);
+      }
     };
 
     fetchProfileInformation();
