@@ -47,21 +47,24 @@ export const BookPage = () => {
   }, []);
 
   useEffect(() => {
-    if (accessToken == null) return;
-    axios
-      .get(
+    const fetchUserInfoOnBook = async () => {
+      const userInfoOnBookQuery = await axios.get(
         `http://localhost:3001/api/users/${
           jwt_decode(accessToken).user_id
         }/${id}`
-      )
-      .then((data) => {
-        const userInfoOnBook = data.data;
-        if (data.data.status !== -1) {
-          setStatus(userInfoOnBook.status);
-          setPagesRead(userInfoOnBook.pagesread);
-          setScore(userInfoOnBook.score);
-        }
-      });
+      );
+
+      const userInfoOnBook = userInfoOnBookQuery.data;
+      if (userInfoOnBook.status !== -1) {
+        setStatus(userInfoOnBook.status);
+        setPagesRead(userInfoOnBook.pagesread);
+        setScore(userInfoOnBook.score);
+      }
+    };
+
+    if (accessToken == null) return;
+
+    fetchUserInfoOnBook();
     // eslint-disable-next-line
   }, [accessToken]);
 
