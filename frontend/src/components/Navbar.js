@@ -29,23 +29,26 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Navbar = () => {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(-1);
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
   // const [auth, setAuth] = useState(true);
   const auth = false;
   const open = Boolean(anchorEl);
-  const pages = ['about', 'search'];
+  const pages = ['/', '/about', '/search'];
 
   // sets tab to the correct page
   useEffect(() => {
-    const startingPage = window.location.href.toLowerCase();
+    const startingPage = window.location.pathname.toLowerCase();
+
     for (let index = 0; index < pages.length; index++) {
-      if (startingPage.includes(pages[index])) {
-        setValue(index + 1);
+      if (startingPage === pages[index]) {
+        setValue(index);
         return;
       }
     }
+    // if it does not find the page, do not set the marker
+    setValue(-1);
     // eslint-disable-next-line
   }, []);
 
