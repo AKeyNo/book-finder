@@ -30,7 +30,6 @@ function App() {
             direction='row'
             justifyContent='center'
             alignItems='center'
-            spacing={10}
           >
             <Grid container item xs={false} sm={1} md={2} />
             <Grid container item xs={12} sm={10} md={8}>
