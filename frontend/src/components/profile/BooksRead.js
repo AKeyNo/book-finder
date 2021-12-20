@@ -1,5 +1,6 @@
 import { Grid, Link, makeStyles, Paper } from '@material-ui/core';
 import React from 'react';
+import missingBookImage from '../../images/missingBookImage.png';
 
 const useStyles = makeStyles((theme) => ({
   bookImage: {
@@ -27,11 +28,7 @@ export const BooksRead = ({ books }) => {
                 <a href={`/book/` + book.book_id}>
                   <img
                     className={classes.bookImage}
-                    src={
-                      book.image !== undefined
-                        ? book.image
-                        : 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Missing.png/440px-Missing.png'
-                    }
+                    src={book.image !== null ? book.image : missingBookImage}
                     alt={book.title}
                   />
                 </a>

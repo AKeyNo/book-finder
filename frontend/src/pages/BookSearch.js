@@ -8,6 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import missingBookImage from '../images/missingBookImage.png';
 
 const useStyles = makeStyles({
   authors: {
@@ -136,7 +137,7 @@ export const BookSearch = () => {
                     src={
                       bookInformation.imageLinks !== undefined
                         ? bookInformation.imageLinks.thumbnail
-                        : 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Missing.png/440px-Missing.png'
+                        : missingBookImage
                     }
                     alt={bookInformation.title}
                   />

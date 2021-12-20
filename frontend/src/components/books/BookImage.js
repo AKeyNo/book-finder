@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, makeStyles } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import missingBookImage from '../../images/missingBookImage.png';
 
 const useStyles = makeStyles({
   bookImage: {
@@ -28,11 +29,7 @@ export const BookImage = ({ book, handleFavorite, isFavorited }) => {
         <>
           <img
             className={classes.bookImage}
-            src={
-              book.imageLinks
-                ? book.imageLinks.thumbnail
-                : 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Missing.png/440px-Missing.png'
-            }
+            src={book.imageLinks ? book.imageLinks.thumbnail : missingBookImage}
             alt={book.title}
           />
           <Button
