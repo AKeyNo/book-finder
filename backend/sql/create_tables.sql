@@ -20,3 +20,25 @@ CREATE TABLE IF NOT EXISTS readList (
     REFERENCES users(user_id),
   PRIMARY KEY(book_id, user_id)
 );
+
+CREATE TABLE IF NOT EXISTS bookReviews (
+  book_id VARCHAR(250) NOT NULL,
+  author_id INT NOT NULL,
+  postTime timestamptz,
+  review TEXT,
+  CONSTRAINT fk_user
+    FOREIGN KEY(author_id)
+    REFERENCES users(user_id),
+  PRIMARY KEY(book_id, author_id)
+);
+
+CREATE TABLE IF NOT EXISTS bookReviewLikes (
+  book_id VARCHAR(250) NOT NULL,
+  author_id INT NOT NULL,
+  userWhoLiked_id INT NOT NULL,
+  likedTime timestamptz,
+  CONSTRAINT fk_user
+    FOREIGN KEY(author_id)
+    REFERENCES users(user_id),
+  PRIMARY KEY(book_id, author_id, userWhoLiked_id)
+);
