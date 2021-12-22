@@ -14,17 +14,24 @@ reviewsRouter.get('/:book_id/:author_id', async (request, response) => {
   try {
     const reviewQuery = await db.query(
       '\
-      SELECT * FROM bookReviews\
-      WHERE book_id=$1 AND author_id=$2',
+      SELECT u.username, br.book_id, br.author_id, br.postTime, br.review\
+      FROM users u, bookReviews br\
+      WHERE br.book_id=$1 AND br.author_id=$2 AND br.author_id=u.user_id',
       [book_id, author_id]
     );
 
+    if (reviewQuery.rowCount === 0) {
+      return response.status(404).json({
+        error: 'That book review does not exist!',
+      });
+    }
     const reviewInformation = reviewQuery.rows[0];
 
     return response.status(200).json({
       book_id: reviewInformation.book_id,
       author_id: reviewInformation.author_id,
-      posttime: reviewInformation.posttime,
+      username: reviewInformation.username,
+      postTime: reviewInformation.postTime,
       review: reviewInformation.review,
     });
   } catch (e) {
@@ -40,8 +47,9 @@ reviewsRouter.get('/:book_id', async (request, response) => {
   try {
     const reviewQuery = await db.query(
       '\
-      SELECT * FROM bookReviews\
-      WHERE book_id=$1',
+      SELECT u.username, br.book_id, br.author_id, br.postTime, br.review\
+      FROM users u, bookReviews br\
+      WHERE br.book_id=$1 AND br.author_id=u.user_id',
       [book_id]
     );
 

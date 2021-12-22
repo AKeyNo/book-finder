@@ -37,8 +37,8 @@ export const AddToList = ({
   const classes = useStyles();
 
   return (
-    <Paper variant='outlined'>
-      <form onSubmit={handleSubmitClicked}>
+    <form onSubmit={handleSubmitClicked}>
+      <Paper>
         <Grid container justifyContent='center' alignItems='center' spacing={1}>
           <Grid container item xs={12}>
             <FormControl className={classes.bookInput}>
@@ -87,7 +87,7 @@ export const AddToList = ({
             </Button>
           </Grid>
         </Grid>
-      </form>
-    </Paper>
+      </Paper>
+    </form>
   );
 };

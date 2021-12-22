@@ -9,6 +9,7 @@ import jwt_decode from 'jwt-decode';
 import { BookDescription } from '../components/books/BookDescription';
 import { BookImage } from '../components/books/BookImage';
 import { AddToList } from '../components/books/AddToList';
+import { BookReviews } from '../components/books/BookReviews';
 
 const useStyles = makeStyles({
   loading: {
@@ -24,6 +25,7 @@ export const BookPage = () => {
   const [status, setStatus] = useState(0);
   const [pagesRead, setPagesRead] = useState(0);
   const [score, setScore] = useState(0);
+
   const { id } = useParams();
 
   useEffect(() => {
@@ -61,7 +63,6 @@ export const BookPage = () => {
         setScore(userInfoOnBook.score);
       }
     };
-
     if (accessToken == null) return;
 
     fetchUserInfoOnBook();
@@ -102,27 +103,33 @@ export const BookPage = () => {
   return (
     <>
       {book ? (
-        <Grid container spacing={8}>
-          <Grid container justifyContent={'center'} item xs={4}>
-            <BookImage
-              book={book}
-              isFavorited={isFavorited}
-              handleFavorite={handleFavorite}
-            />
-            {accessToken ? (
-              <AddToList
-                book={book}
-                handleSubmitClicked={handleSubmitClicked}
-                handleStatus={handleStatus}
-                handlePagesRead={handlePagesRead}
-                pagesRead={pagesRead}
-                score={score}
-                status={status}
-                handleScore={handleScore}
-              />
-            ) : null}
+        <Grid container spacing={8} direction='column'>
+          <Grid container item justifyContent='center' xs={3}>
+            <Grid container direction='column'>
+              <Grid container item justifyContent='center'>
+                <BookImage
+                  book={book}
+                  isFavorited={isFavorited}
+                  handleFavorite={handleFavorite}
+                />
+              </Grid>
+              <Grid container item>
+                {accessToken ? (
+                  <AddToList
+                    book={book}
+                    handleSubmitClicked={handleSubmitClicked}
+                    handleStatus={handleStatus}
+                    handlePagesRead={handlePagesRead}
+                    pagesRead={pagesRead}
+                    score={score}
+                    status={status}
+                    handleScore={handleScore}
+                  />
+                ) : null}
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid container item direction='row' spacing={2} xs={8}>
+          {/* <Grid container item direction='row' spacing={2} xs={9}>
             <Grid container item xs={12} />
             <Grid container item xs={12}>
               <Typography variant='h4' gutterBottom>
@@ -131,8 +138,10 @@ export const BookPage = () => {
             </Grid>
             <BookDescription book={book} />
             <Grid container item xs={12} />
-          </Grid>
-          <Grid container justifyContent='center' item xs={6}></Grid>
+            <Grid container item xs={12}>
+              <BookReviews book_id={id} />
+            </Grid>
+          </Grid> */}
         </Grid>
       ) : (
         <div className={classes.loading}>
