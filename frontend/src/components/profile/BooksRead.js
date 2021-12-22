@@ -44,7 +44,11 @@ export const BooksRead = ({ books }) => {
                 <br />
                 {book.authors ? book.authors : 'Unknown Author'}
                 <br />
+                <br />
                 {book.status ? book.status : 'Unknown Status'}
+                <br />
+                {book.status != 'Plan to Read' ? `${book.pagesRead}/` : null}
+                {book.pageCount != undefined ? book.pageCount : '?'}
                 <br />
                 <br />
                 Rating: {book.score ? `${book.score}/10` : 'Unrated'}

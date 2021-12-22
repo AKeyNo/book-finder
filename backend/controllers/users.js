@@ -55,7 +55,7 @@ usersRouter.get('/:user_id/read', async (request, response) => {
   const { user_id } = request.params;
   try {
     const getReadListQuery = await db.query(
-      'SELECT book_id, pagesread, score, status FROM readlist WHERE user_id=$1',
+      'SELECT book_id, pagesread, score, status FROM readList WHERE user_id=$1',
       [user_id]
     );
 
@@ -66,7 +66,7 @@ usersRouter.get('/:user_id/read', async (request, response) => {
         );
 
         const bookInformation = bookQuery.data.volumeInfo;
-
+        console.log(bookInformation.pageCount);
         return {
           book_id: book.book_id,
           title: bookInformation.title,
@@ -75,6 +75,8 @@ usersRouter.get('/:user_id/read', async (request, response) => {
             ? bookInformation.imageLinks.thumbnail
             : null,
           score: book.score,
+          pagesRead: book.pagesread,
+          pageCount: bookInformation.pageCount,
           status: STATUS[book.status],
         };
       }

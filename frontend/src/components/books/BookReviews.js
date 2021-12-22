@@ -33,7 +33,7 @@ export const BookReviews = ({ book_id }) => {
       const bookReviewsOnBookQuery = await axios.get(
         `http://localhost:3001/api/reviews/${book_id}`
       );
-
+      console.log(bookReviewsOnBookQuery);
       setBookReviews(bookReviewsOnBookQuery.data.reviews);
     };
 
