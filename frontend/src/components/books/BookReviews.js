@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Link, makeStyles, Paper, Typography } from '@material-ui/core';
 import axios from 'axios';
-import missingBookImage from '../../images/missingBookImage.png';
 
 const useStyles = makeStyles({
   profilePicture: {
