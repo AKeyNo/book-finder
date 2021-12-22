@@ -129,7 +129,7 @@ export const BookPage = () => {
               </Grid>
             </Grid>
           </Grid>
-          {/* <Grid container item direction='row' spacing={2} xs={9}>
+          <Grid container item direction='row' spacing={2} xs={9}>
             <Grid container item xs={12} />
             <Grid container item xs={12}>
               <Typography variant='h4' gutterBottom>
@@ -141,7 +141,7 @@ export const BookPage = () => {
             <Grid container item xs={12}>
               <BookReviews book_id={id} />
             </Grid>
-          </Grid> */}
+          </Grid>
         </Grid>
       ) : (
         <div className={classes.loading}>
