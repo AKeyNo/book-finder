@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Link, makeStyles, Paper, Typography } from '@material-ui/core';
+import {
+  Box,
+  Grid,
+  Link,
+  makeStyles,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 import axios from 'axios';
 
 const useStyles = makeStyles({
+  box: {
+    padding: '15px',
+  },
   profilePicture: {
     height: '50px',
     width: '50px',
@@ -42,37 +52,41 @@ export const BookReviews = ({ book_id }) => {
   }, []);
 
   return (
-    <Grid container direction='row' spacing={2}>
+    <Grid container direction='row'>
       {bookReviews &&
         bookReviews.map((review, index) => {
           return (
             <Grid container item xs={12} key={index}>
-              <Paper>
-                <Typography className={classes.user}>
-                  <Link
-                    href={`/profile/${review.author_id}`}
-                    color='inherit'
-                    className={classes.bookInformation}
-                  >
-                    <img
-                      src={`http://localhost:3001/api/users/${review.author_id}/picture`}
-                      alt={'profile'}
-                      className={classes.profilePicture}
-                    />
-                  </Link>
-                  <Link
-                    href={`/profile/${review.author_id}`}
-                    color='inherit'
-                    className={classes.bookInformation}
-                  >
-                    <span className={classes.username}>{review.username}</span>
-                  </Link>
-                </Typography>
-                <Typography className={classes.review}>
-                  <br />
-                  {review.review}
-                </Typography>
-              </Paper>
+              <Box display='inline-block' className={classes.box}>
+                <Paper>
+                  <Typography className={classes.user}>
+                    <Link
+                      href={`/profile/${review.author_id}`}
+                      color='inherit'
+                      className={classes.bookInformation}
+                    >
+                      <img
+                        src={`http://localhost:3001/api/users/${review.author_id}/picture`}
+                        alt={'profile'}
+                        className={classes.profilePicture}
+                      />
+                    </Link>
+                    <Link
+                      href={`/profile/${review.author_id}`}
+                      color='inherit'
+                      className={classes.bookInformation}
+                    >
+                      <span className={classes.username}>
+                        {review.username}
+                      </span>
+                    </Link>
+                  </Typography>
+                  <Typography className={classes.review}>
+                    <br />
+                    {review.review}
+                  </Typography>
+                </Paper>
+              </Box>
             </Grid>
           );
         })}

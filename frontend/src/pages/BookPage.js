@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
-import { makeStyles, Typography } from '@material-ui/core';
+import { Button, makeStyles, Typography } from '@material-ui/core';
 import { useToken } from '../services/TokenContext';
 import jwt_decode from 'jwt-decode';
 import { BookDescription } from '../components/books/BookDescription';
@@ -12,6 +12,13 @@ import { AddToList } from '../components/books/AddToList';
 import { BookReviews } from '../components/books/BookReviews';
 
 const useStyles = makeStyles({
+  reviewHeaderText: {
+    flexGrow: '1',
+  },
+  reviewButton: {
+    height: '50px',
+    width: '150px',
+  },
   loading: {
     textAlign: 'center',
   },
@@ -85,6 +92,7 @@ export const BookPage = () => {
   };
 
   const handleScore = (event) => {
+    event.preventDefault();
     setScore(parseInt(event.target.value));
   };
 
@@ -103,7 +111,7 @@ export const BookPage = () => {
   return (
     <>
       {book ? (
-        <Grid container spacing={8} direction='column'>
+        <Grid container>
           <Grid container item justifyContent='center' xs={3}>
             <Grid container direction='column'>
               <Grid container item justifyContent='center'>
@@ -129,18 +137,17 @@ export const BookPage = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container item direction='row' spacing={2} xs={9}>
-            <Grid container item xs={12} />
-            <Grid container item xs={12}>
-              <Typography variant='h4' gutterBottom>
-                {book.title}
+          <Grid container item direction='row' xs={9}>
+            <>
+              <Typography variant='h4'>{book.title}</Typography>
+              {book.description ? <BookDescription book={book} /> : <></>}
+
+              <Typography variant='h4' className={classes.reviewHeaderText}>
+                Reviews
               </Typography>
-            </Grid>
-            <BookDescription book={book} />
-            <Grid container item xs={12} />
-            <Grid container item xs={12}>
+              <Button className={classes.reviewButton}>Submit a Review!</Button>
               <BookReviews book_id={id} />
-            </Grid>
+            </>
           </Grid>
         </Grid>
       ) : (

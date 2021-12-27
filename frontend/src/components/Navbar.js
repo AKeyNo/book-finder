@@ -11,6 +11,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
+  appBar: {
+    marginBottom: '20px',
+  },
   root: {
     flexGrow: 1,
   },
@@ -65,7 +68,7 @@ export const Navbar = () => {
   };
 
   return (
-    <AppBar position='static' color='default'>
+    <AppBar position='static' color='default' className={classes.appBar}>
       <Toolbar>
         <Grid
           container
