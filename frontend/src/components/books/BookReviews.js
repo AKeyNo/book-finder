@@ -8,6 +8,10 @@ import {
   Typography,
 } from '@material-ui/core';
 import axios from 'axios';
+import { PostBookReview } from './PostBookReview';
+import { useToken } from '../../services/TokenContext';
+
+const postBookReviewURL = 'http://localhost:3001/api/reviews/';
 
 const useStyles = makeStyles({
   box: {
@@ -36,7 +40,26 @@ const useStyles = makeStyles({
 
 export const BookReviews = ({ book_id }) => {
   const classes = useStyles();
+  const accessToken = useToken();
+
   const [bookReviews, setBookReviews] = useState(null);
+  const [isReviewActive, setIsReviewActive] = useState(true);
+
+  const handleSubmitReview = async (event, review) => {
+    event.preventDefault();
+    console.log(`${postBookReviewURL}/${book_id}/`);
+    const sentBookReview = await axios.post(
+      `${postBookReviewURL}/${book_id}/`,
+      { review },
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
+
+    console.log(sentBookReview);
+    setIsReviewActive(false);
+    console.log(review);
+  };
 
   useEffect(() => {
     const fetchBookReviewsOnBook = async () => {
@@ -53,6 +76,12 @@ export const BookReviews = ({ book_id }) => {
 
   return (
     <Grid container direction='row'>
+      <Grid container item xs={12}>
+        {isReviewActive ? (
+          <PostBookReview handleSubmitReview={handleSubmitReview} />
+        ) : null}
+      </Grid>
+
       {bookReviews &&
         bookReviews.map((review, index) => {
           return (

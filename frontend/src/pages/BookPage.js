@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
-import { Button, makeStyles, Typography } from '@material-ui/core';
+import { Button, makeStyles, TextField, Typography } from '@material-ui/core';
 import { useToken } from '../services/TokenContext';
 import jwt_decode from 'jwt-decode';
 import { BookDescription } from '../components/books/BookDescription';
 import { BookImage } from '../components/books/BookImage';
 import { AddToList } from '../components/books/AddToList';
 import { BookReviews } from '../components/books/BookReviews';
+import { PostBookReview } from '../components/books/PostBookReview';
 
 const useStyles = makeStyles({
   reviewHeaderText: {
@@ -141,11 +142,9 @@ export const BookPage = () => {
             <>
               <Typography variant='h4'>{book.title}</Typography>
               {book.description ? <BookDescription book={book} /> : <></>}
-
               <Typography variant='h4' className={classes.reviewHeaderText}>
                 Reviews
               </Typography>
-              <Button className={classes.reviewButton}>Submit a Review!</Button>
               <BookReviews book_id={id} />
             </>
           </Grid>

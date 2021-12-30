@@ -1,47 +1,48 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import axios from 'axios';
 import {
-  Box,
   Button,
-  Grid,
+  FormControl,
   makeStyles,
   Paper,
-  TextareaAutosize,
   TextField,
 } from '@material-ui/core';
 
 const useStyles = makeStyles({
+  formControl: {
+    padding: '15px',
+  },
+  paper: { padding: '15px' },
   loading: {
     textAlign: 'center',
   },
+  form: {
+    width: '100%',
+  },
 });
 
-export const PostBookReview = () => {
+export const PostBookReview = ({ handleSubmitReview }) => {
   const classes = useStyles();
-  const bookReview = useRef('');
 
-  const handleSubmitBookReview = (event) => {
-    event.preventDefault();
-  };
+  const bookReview = useRef('');
 
   return (
     <form
-      className={classes.bookSearch}
-      onSubmit={handleSubmitBookReview}
-      noValidate
-      autoComplete='off'
+      onSubmit={(e) => handleSubmitReview(e, bookReview.current)}
+      className={classes.form}
     >
-      <Box display='inline-block' className={classes.box}>
-        <TextareaAutosize
-          maxRows={5}
-          aria-label='maximum height'
-          placeholder='Write a book review for this book!'
-          defaultValue=''
-          style={{ width: '100%' }}
-          onChange={(e) => (bookReview.current = e.target.value)}
-        />
-        <Button type='submit'>Search</Button>
-      </Box>
+      <FormControl fullWidth className={classes.formControl}>
+        <Paper className={classes.paper}>
+          <TextField
+            multiline
+            fullWidth
+            rows={5}
+            maxRows={10}
+            onChange={(e) => (bookReview.current = e.target.value)}
+          ></TextField>
+          <Button type='submit'>Submit Book Review</Button>
+        </Paper>
+      </FormControl>
     </form>
   );
 };
