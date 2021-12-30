@@ -65,7 +65,9 @@ export const AddToList = ({
             <Grid container item xs={12}>
               <TextField
                 id='pages-read'
-                label={`Page Read (${book.pageCount} total)`}
+                label={`Page Read (${
+                  book.pageCount !== undefined ? book.pageCount : '?'
+                } total)`}
                 type='number'
                 onChange={handlePagesRead}
                 className={classes.bookInput}
