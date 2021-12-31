@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
-import { Button, makeStyles, TextField, Typography } from '@material-ui/core';
+import { makeStyles, Typography } from '@material-ui/core';
 import { useToken } from '../services/TokenContext';
 import jwt_decode from 'jwt-decode';
 import { BookDescription } from '../components/books/BookDescription';
 import { BookImage } from '../components/books/BookImage';
 import { AddToList } from '../components/books/AddToList';
 import { BookReviews } from '../components/books/BookReviews';
-import { PostBookReview } from '../components/books/PostBookReview';
 
 const useStyles = makeStyles({
   reviewHeaderText: {
