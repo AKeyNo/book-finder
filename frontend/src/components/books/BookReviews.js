@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box,
+  Button,
   Grid,
   Link,
   makeStyles,
@@ -10,6 +11,7 @@ import {
 import axios from 'axios';
 import { PostBookReview } from './PostBookReview';
 import { useToken } from '../../services/TokenContext';
+import jwt_decode from 'jwt-decode';
 
 const postBookReviewURL = 'http://localhost:3001/api/reviews/';
 
@@ -31,10 +33,14 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     paddingLeft: '20px',
+    flexGrow: '1',
   },
   review: {
     padding: '20px',
     paddingTop: '0px',
+  },
+  manageReviewButton: {
+    display: 'flex-end',
   },
 });
 
@@ -47,18 +53,53 @@ export const BookReviews = ({ book_id }) => {
 
   const handleSubmitReview = async (event, review) => {
     event.preventDefault();
-    console.log(`${postBookReviewURL}/${book_id}/`);
-    const sentBookReview = await axios.post(
-      `${postBookReviewURL}/${book_id}/`,
-      { review },
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      }
-    );
 
-    console.log(sentBookReview);
+    try {
+      await axios.post(
+        `${postBookReviewURL}${book_id}/`,
+        { review },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+    } catch (e) {
+      window.alert('Could not upload book review!');
+      console.log(e);
+    }
+
+    const reviewInformation = {
+      author_id: jwt_decode(accessToken).user_id,
+      book_id: book_id,
+      postTime: new Date(),
+      review: review,
+      username: jwt_decode(accessToken).username,
+    };
+
+    // sort book reviews with new review on top
+    const newReviewList = bookReviews;
+    newReviewList.unshift(reviewInformation);
+
+    setBookReviews(newReviewList);
     setIsReviewActive(false);
-    console.log(review);
+  };
+
+  const handleDeleteReview = async (event, reviewToRemove) => {
+    event.preventDefault();
+
+    try {
+      await axios.delete(`${postBookReviewURL}${book_id}/`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      setBookReviews(
+        bookReviews.filter(
+          (review) => review.author_id !== reviewToRemove.author_id
+        )
+      );
+      setIsReviewActive(true);
+    } catch (e) {
+      window.alert('Unable to delete book review.');
+      console.log(e);
+    }
   };
 
   useEffect(() => {
@@ -66,10 +107,25 @@ export const BookReviews = ({ book_id }) => {
       const bookReviewsOnBookQuery = await axios.get(
         `http://localhost:3001/api/reviews/${book_id}`
       );
-      console.log(bookReviewsOnBookQuery);
-      setBookReviews(bookReviewsOnBookQuery.data.reviews);
-    };
 
+      // set the user review to the first if it is there
+      // if they have a review, do not show component for making one
+      const currentUserReview = bookReviewsOnBookQuery.data.reviews.filter(
+        (bookReview) => bookReview.author_id === currentUser
+      );
+
+      if (currentUserReview.length === 1) {
+        setIsReviewActive(false);
+      }
+
+      const otherReviews = bookReviewsOnBookQuery.data.reviews.filter(
+        (bookReview) => bookReview.author_id !== currentUser
+      );
+
+      const sortedReviews = currentUserReview.concat(otherReviews);
+      setBookReviews(sortedReviews);
+    };
+    const currentUser = jwt_decode(accessToken).user_id;
     fetchBookReviewsOnBook();
     // eslint-disable-next-line
   }, []);
@@ -103,12 +159,23 @@ export const BookReviews = ({ book_id }) => {
                     <Link
                       href={`/profile/${review.author_id}`}
                       color='inherit'
-                      className={classes.bookInformation}
+                      className={classes.username}
                     >
-                      <span className={classes.username}>
-                        {review.username}
-                      </span>
+                      <span>{review.username}</span>
                     </Link>
+                    {review.author_id === jwt_decode(accessToken).user_id ? (
+                      <>
+                        <Button className={classes.manageReviewButton}>
+                          Edit
+                        </Button>
+                        <Button
+                          className={classes.manageReviewButton}
+                          onClick={(event) => handleDeleteReview(event, review)}
+                        >
+                          Delete
+                        </Button>
+                      </>
+                    ) : null}
                   </Typography>
                   <Typography className={classes.review}>
                     <br />

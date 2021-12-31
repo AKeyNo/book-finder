@@ -9,7 +9,6 @@ import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { TokenProvider } from './services/TokenContext';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { Grid } from '@material-ui/core';
-import { PostBookReview } from './components/books/PostBookReview';
 
 require('dotenv').config();
 
