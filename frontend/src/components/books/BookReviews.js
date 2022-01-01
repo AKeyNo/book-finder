@@ -65,6 +65,7 @@ export const BookReviews = ({ book_id }) => {
     } catch (e) {
       window.alert('Could not upload book review!');
       console.log(e);
+      return;
     }
 
     const reviewInformation = {
