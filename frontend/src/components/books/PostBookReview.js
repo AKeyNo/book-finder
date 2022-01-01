@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-export const PostBookReview = ({ handleSubmitReview }) => {
+export const PostBookReview = ({ handleSubmitReview, review }) => {
   const classes = useStyles();
 
   const bookReview = useRef('');
@@ -38,6 +38,7 @@ export const PostBookReview = ({ handleSubmitReview }) => {
             rows={5}
             maxRows={10}
             onChange={(e) => (bookReview.current = e.target.value)}
+            defaultValue={review}
           ></TextField>
           <Button type='submit'>Submit Book Review</Button>
         </Paper>

@@ -170,7 +170,7 @@ reviewsRouter.put(
     const { book_id } = request.params;
     const { user_id } = request.user;
     const { review } = request.body;
-    console.log('here');
+
     // check if that user has an existing review already
     try {
       const checkExistingQuery = await db.query(

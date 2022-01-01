@@ -50,6 +50,7 @@ export const BookReviews = ({ book_id }) => {
 
   const [bookReviews, setBookReviews] = useState(null);
   const [isReviewActive, setIsReviewActive] = useState(true);
+  const [isEditActive, setIsEditActive] = useState(false);
 
   const handleSubmitReview = async (event, review) => {
     event.preventDefault();
@@ -84,6 +85,41 @@ export const BookReviews = ({ book_id }) => {
     setIsReviewActive(false);
   };
 
+  const handleEditReview = async (event, reviewToEdit) => {
+    event.preventDefault();
+
+    console.log(reviewToEdit + 'review to edit');
+
+    try {
+      await axios.put(
+        `${postBookReviewURL}${book_id}/`,
+        { review: reviewToEdit },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+
+      const reviewInformation = {
+        author_id: jwt_decode(accessToken).user_id,
+        book_id: book_id,
+        postTime: new Date(),
+        review: reviewToEdit,
+        username: jwt_decode(accessToken).username,
+      };
+
+      // sort book reviews with new review on top
+      const newReviewList = bookReviews;
+      newReviewList.unshift(reviewInformation);
+
+      setBookReviews(newReviewList);
+      setIsEditActive(false);
+    } catch (e) {
+      window.alert('Could not edit book review!');
+      console.log(e);
+      return;
+    }
+  };
+
   const handleDeleteReview = async (event, reviewToRemove) => {
     event.preventDefault();
 
@@ -101,6 +137,18 @@ export const BookReviews = ({ book_id }) => {
       window.alert('Unable to delete book review.');
       console.log(e);
     }
+  };
+
+  const handleEditPressed = async (event, reviewToEdit) => {
+    event.preventDefault();
+
+    await setIsEditActive(true);
+
+    setBookReviews(
+      bookReviews.filter(
+        (review) => review.author_id !== reviewToEdit.author_id
+      )
+    );
   };
 
   useEffect(() => {
@@ -137,6 +185,12 @@ export const BookReviews = ({ book_id }) => {
         {isReviewActive ? (
           <PostBookReview handleSubmitReview={handleSubmitReview} />
         ) : null}
+        {isEditActive ? (
+          <PostBookReview
+            handleSubmitReview={handleEditReview}
+            review={bookReviews[0].review}
+          />
+        ) : null}
       </Grid>
 
       {bookReviews &&
@@ -166,7 +220,10 @@ export const BookReviews = ({ book_id }) => {
                     </Link>
                     {review.author_id === jwt_decode(accessToken).user_id ? (
                       <>
-                        <Button className={classes.manageReviewButton}>
+                        <Button
+                          className={classes.manageReviewButton}
+                          onClick={(event) => handleEditPressed(event, review)}
+                        >
                           Edit
                         </Button>
                         <Button
