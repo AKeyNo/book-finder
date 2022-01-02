@@ -109,7 +109,7 @@ export const BookReviews = ({ book_id }) => {
 
       // sort book reviews with new review on top
       const newReviewList = bookReviews;
-      newReviewList.unshift(reviewInformation);
+      newReviewList[0] = reviewInformation;
 
       setBookReviews(newReviewList);
       setIsEditActive(false);
@@ -142,13 +142,7 @@ export const BookReviews = ({ book_id }) => {
   const handleEditPressed = async (event, reviewToEdit) => {
     event.preventDefault();
 
-    await setIsEditActive(true);
-
-    setBookReviews(
-      bookReviews.filter(
-        (review) => review.author_id !== reviewToEdit.author_id
-      )
-    );
+    setIsEditActive(true);
   };
 
   useEffect(() => {
@@ -218,7 +212,8 @@ export const BookReviews = ({ book_id }) => {
                     >
                       <span>{review.username}</span>
                     </Link>
-                    {review.author_id === jwt_decode(accessToken).user_id ? (
+                    {review.author_id === jwt_decode(accessToken).user_id &&
+                    !isEditActive ? (
                       <>
                         <Button
                           className={classes.manageReviewButton}
