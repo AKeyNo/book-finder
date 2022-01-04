@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  react:
+  book-finder:
     container_name: frontend
     build:
       context: ./frontend
@@ -10,19 +10,6 @@ services:
       - '/frontend/node_modules'
     ports:
       - 3000:3000
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-
-  server:
-    container_name: backend
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    volumes:
-      - '.:/backend'
-      - '/backend/node_modules'
-    ports:
-      - 3001:3001
     environment:
       - CHOKIDAR_USEPOLLING=true
 
@@ -45,3 +32,29 @@ services:
       - ./backend/sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
       # copy the sql script to fill tables
       - ./backend/sql/fill_tables.sql:/docker-entrypoint-initdb.d/fill_tables.sql
+
+  app:
+    container_name: app
+    build:
+      context: ./app
+      dockerfile: ./servers/app/Dockerfile
+    volumes:
+      - '.:/backend'
+      - '/backend/node_modules'
+    ports:
+      - 3001:3001
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+  auth:
+    container_name: auth
+    build:
+      context: ./auth
+      dockerfile: ./servers/auth/Dockerfile
+    volumes:
+      - '.:/backend'
+      - '/backend/node_modules'
+    ports:
+      - 4001:4001
+    environment:
+      - CHOKIDAR_USEPOLLING=true

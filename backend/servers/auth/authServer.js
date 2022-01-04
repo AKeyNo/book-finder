@@ -4,11 +4,11 @@ const morgan = require('morgan');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const app = express();
-const tokenRouter = require('./controllers/token');
-const middleware = require('./utils/middleware');
-const signInRouter = require('./controllers/signin');
-const signUpRouter = require('./controllers/signup');
-const signOutRouter = require('./controllers/signout');
+const tokenRouter = require('../../controllers/token');
+const middleware = require('../../utils/middleware');
+const signInRouter = require('../../controllers/signin');
+const signUpRouter = require('../../controllers/signup');
+const signOutRouter = require('../../controllers/signout');
 const port = process.env.AUTHPORT || 4001;
 
 app.use(morgan('dev'));
