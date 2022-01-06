@@ -42,3 +42,30 @@ CREATE TABLE IF NOT EXISTS bookReviewLikes (
     REFERENCES users(user_id),
   PRIMARY KEY(book_id, author_id, userWhoLiked_id)
 );
+
+-- Set params
+set session my.number_of_users = '500';
+set session my.start_date = '2019-01-01 00:00:00';
+set session my.end_date = '2020-02-01 00:00:00';
+
+-- load the pgcrypto extension to gen_random_uuid ()
+CREATE EXTENSION pgcrypto;
+
+-- Filling of users
+INSERT INTO users
+VALUES (0, 'user0', 'notarealpassword1becausehash', 'Hello!', 'notarealtoken1');
+
+INSERT INTO users
+VALUES (1, 'user1', 'notarealpassword1becausehash2', 'Hello 2!', 'notarealtoken2');
+
+INSERT INTO users
+VALUES (2, 'user2', 'notarealpassword1becausehash3', 'Hello 3!', 'notarealtoken3');
+
+INSERT INTO readList
+VALUES ('O5cFzgEACAAJ', 0, 100, 10, 1);
+
+INSERT INTO readList
+VALUES ('O5cFzgEACAAJ', 1, 50, 9, 2);
+
+INSERT INTO readList
+VALUES ('O5cFzgEACAAJ', 2, 25, 4, 3);

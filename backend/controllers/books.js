@@ -36,10 +36,10 @@ booksRouter.get('/:book_id', async (request, response) => {
   }
 });
 
-booksRouter.get('/randomReadBooks', async (request, response) => {
-  // try {
-  //   const randomReadBooksQuery = await db.query('SELECT * FROM readList OFFSET FLOOR(random() * SELECT COUNT(*))')
-  // }
-});
+// booksRouter.get('/randomReadBooks', async (request, response) => {
+//   // try {
+//   //   const randomReadBooksQuery = await db.query('SELECT * FROM readList OFFSET FLOOR(random() * SELECT COUNT(*))')
+//   // }
+// });
 
 module.exports = booksRouter;

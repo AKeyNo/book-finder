@@ -27,5 +27,5 @@ app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
 app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}`);
+  console.log(`cListening at http://localhost:${port}`);
 });
