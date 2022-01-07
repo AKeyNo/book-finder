@@ -41,8 +41,8 @@ signupRouter.post('/', async (request, response) => {
       username: body.username,
     });
     await db.query(
-      `INSERT INTO users (user_id, username, hashedPassword, token) values ($1, $2, $3, $4) returning *`,
-      [user_id, body.username, hashedPassword, refreshToken]
+      `INSERT INTO users (user_id, username, hashedPassword, summary, token) values ($1, $2, $3, $4, $5) returning *`,
+      [user_id, body.username, hashedPassword, 'Hello world!', refreshToken]
     );
 
     console.log(`Account successfully created for ${body.username}!`);

@@ -4,10 +4,10 @@ const morgan = require('morgan');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const app = express();
-const usersRouter = require('./controllers/users');
-const booksRouter = require('./controllers/books');
-const reviewsRouter = require('./controllers/reviews.js');
-const middleware = require('./utils/middleware');
+const usersRouter = require('../../controllers/users');
+const booksRouter = require('../../controllers/books');
+const reviewsRouter = require('../../controllers/reviews.js');
+const middleware = require('../../utils/middleware');
 const port = process.env.PORT || 3001;
 
 app.use(morgan('dev'));

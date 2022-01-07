@@ -16,4 +16,4 @@ RUN npm install
 COPY . .
 
 # start it
-CMD ["node", "app"]
+CMD ["npm", "run", "auth"]

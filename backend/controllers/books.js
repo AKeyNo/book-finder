@@ -1,6 +1,7 @@
 require('dotenv').config();
 const booksRouter = require('express').Router();
 const axios = require('axios');
+const db = require('../db');
 
 booksRouter.get('/search/:keywords/:index', async (request, response) => {
   const { keywords, index } = request.params;
@@ -34,5 +35,11 @@ booksRouter.get('/:book_id', async (request, response) => {
     console.error(e);
   }
 });
+
+// booksRouter.get('/randomReadBooks', async (request, response) => {
+//   // try {
+//   //   const randomReadBooksQuery = await db.query('SELECT * FROM readList OFFSET FLOOR(random() * SELECT COUNT(*))')
+//   // }
+// });
 
 module.exports = booksRouter;
